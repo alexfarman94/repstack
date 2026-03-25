@@ -5,540 +5,783 @@ export const tools: Tool[] = [
     id: '1',
     slug: 'deal-prep-brief',
     title: 'Deal Prep Brief',
-    description: 'Generate a thorough research brief for any discovery call in under 2 minutes. Walk in knowing the business, the pain, and the opportunity.',
-    body: 'Before any important call — discovery, demo, or EBC — you need context. This prompt turns a company name, contact name, and job title into a structured brief covering business model, likely pain points, relevant news, competitive landscape, and suggested discovery questions. Built to work with ChatGPT, Claude, or any frontier model.',
+    hook: 'Walk into every meeting knowing more than they expect.',
+    description: 'Generate a sharp, structured research brief for any discovery call, demo, or executive meeting — in seconds.',
+    whyItMatters: "Most reps spend 5 minutes Googling and still feel underprepared. This takes 45 minutes of proper research and does it in 20 seconds. You'll have company context, their likely pain points, trigger events to reference, five sharp opening questions, and a predicted objection list — before you've had your morning coffee.",
+    body: 'Before any important call — discovery, demo, or EBC — you need context. This tool turns a company name, contact, and meeting type into a structured brief covering business model, likely pain points, suggested questions, predicted objections, and a ready-made talk track opener.',
     useCases: [
       'Pre-discovery call research for net-new accounts',
       'Prepping for an enterprise demo or executive briefing',
       'Refreshing context before a re-engagement call',
     ],
     howToUse: [
-      'Copy the prompt below',
-      'Paste it into ChatGPT, Claude, or your preferred AI',
-      'Replace the bracketed fields with your prospect\'s details',
-      'Review the output and add any deal-specific context you already have',
+      'Enter the prospect\'s company, contact name and title, and what you sell',
+      'Select the meeting type',
+      'Hit Generate — review the brief and add any deal-specific context you already have',
     ],
     personas: ['ae', 'se'],
-    format: 'prompt',
+    format: 'embedded',
     tags: ['research', 'discovery', 'preparation'],
     free: true,
     featured: true,
     publishedAt: '2025-03-01',
-    content: `You are a senior B2B sales strategist preparing a rep for an important call.
+    inputs: [
+      {
+        id: 'company',
+        label: 'Prospect company',
+        type: 'text',
+        placeholder: 'e.g. Salesforce, a 500-person logistics SaaS, Acme Corp',
+        required: true,
+      },
+      {
+        id: 'contact',
+        label: 'Contact name and job title',
+        type: 'text',
+        placeholder: 'e.g. Sarah Chen, VP of Sales',
+        required: true,
+      },
+      {
+        id: 'meeting_type',
+        label: 'Meeting type',
+        type: 'select',
+        placeholder: '',
+        required: true,
+        options: ['Discovery call', 'Product demo', 'Executive briefing', 'Re-engagement call'],
+      },
+      {
+        id: 'your_product',
+        label: 'What you sell',
+        type: 'textarea',
+        placeholder: 'e.g. A sales engagement platform that helps BDR teams personalise outreach at scale',
+        required: true,
+        rows: 2,
+      },
+    ],
+    systemPrompt: `You are a senior B2B sales strategist preparing a rep for an important meeting. You are given the prospect's company, their contact and job title, the meeting type, and what the rep sells.
 
-Research the following prospect and produce a structured deal prep brief:
-
-- Company: [COMPANY NAME]
-- Contact: [CONTACT NAME], [JOB TITLE]
-- My product/solution: [BRIEF DESCRIPTION OF YOUR PRODUCT]
-- Meeting type: [discovery call / demo / EBC / re-engagement]
-
-Please provide:
+Produce a sharp, practical deal prep brief in the following structure:
 
 ## Company Overview
-A 3–4 sentence summary of what the company does, their business model, size, and market position.
-
-## Recent News & Triggers
-Any recent press, funding, leadership changes, product launches, or strategic announcements that are relevant.
+3–4 sentences: what the company does, their business model, approximate size, and market position. If the company is well-known, be specific. If not, extrapolate intelligently from the name and context.
 
 ## Likely Pain Points
-Based on their industry, size, and the contact's role — what problems are they probably trying to solve? What keeps someone in this role up at night?
+Based on the industry, company size, and the contact's role — what problems are they probably trying to solve? What keeps someone in this role up at night? Be specific to their seniority and function, not generic.
 
-## Competitive Landscape
-Who are their main competitors? Are there any known tech vendors or tools they might already use?
+## Trigger Events to Reference
+3–4 types of recent developments that would be worth referencing in the meeting — things like hiring trends, funding, product launches, market shifts, competitive pressure. Be specific about what to look for even if you can't confirm real-time data.
 
-## Suggested Discovery Questions
-5–7 sharp, open-ended questions tailored to this contact's role that will uncover budget, authority, need, and timeline.
+## Suggested Opening Questions
+5 sharp, open-ended discovery questions tailored to this contact's role. Not generic — specific to who this person is and what they likely care about. Questions that uncover pain, priority, and urgency.
 
-## Talk Track Suggestion
-A 2–3 sentence opening that acknowledges something specific about their business and positions my product naturally.
+## Predicted Objections
+2–3 objections this prospect is likely to raise early in the conversation, and a one-sentence note on how to handle each.
 
-Keep the tone sharp and actionable. This is for an experienced rep who wants insight, not padding.`,
+## Talk Track Opener
+A 2–3 sentence opening the rep can use verbatim — specific to this prospect's context, natural, and leading into the reason for the meeting. Should not start with "I" or sound like a sales script.
+
+Tone: direct, experienced, practical. No padding. This rep knows their job — they just need the intel fast.`,
   },
   {
     id: '2',
     slug: 'business-case-builder',
     title: 'Business Case Builder',
-    description: 'Turn your call notes into a structured business case your champion can share upward — in minutes, not hours.',
-    body: 'The biggest deals stall because champions can\'t articulate the value internally. This prompt takes your discovery notes and builds a clean, executive-ready business case with ROI framing, strategic rationale, and risk mitigation. Designed to help your champion sell when you\'re not in the room.',
+    hook: 'Give your champion the ammunition to win the room without you.',
+    description: 'Turn your discovery notes into an executive-ready business case your champion can share upward — in minutes.',
+    whyItMatters: "Most deals die in the internal meetings you're never invited to. Your champion needs something they can forward to their CFO without it looking like it came from a vendor. This produces a clean, professional business case with ROI framing, strategic rationale, and ready-made answers to the hard questions.",
+    body: 'The biggest deals stall because champions can\'t articulate the value internally. This tool takes your discovery findings and builds a clear, executive-ready business case — written in the champion\'s voice, not the vendor\'s.',
     useCases: [
-      'Arming a champion with internal justification material',
-      'Preparing a business case ahead of an executive sign-off meeting',
-      'Structuring a commercial proposal narrative',
+      'Arming a champion before an internal stakeholder meeting',
+      'Preparing justification material ahead of a budget committee',
+      'Giving a champion who is new to their role the words they need',
     ],
     howToUse: [
-      'After your discovery or demo call, paste your notes into the prompt',
-      'Fill in the metrics and context from your conversation',
-      'Run it through ChatGPT or Claude',
-      'Edit the output to match your champion\'s internal language',
+      'Enter the company, champion details, and what you learned in discovery',
+      'Add any ROI metrics or outcomes discussed',
+      'Generate — then share the output with your champion and walk through it together',
     ],
     personas: ['ae', 'se'],
-    format: 'prompt',
+    format: 'embedded',
     tags: ['business-case', 'roi', 'champion', 'enterprise'],
     free: true,
     featured: true,
     publishedAt: '2025-03-01',
-    content: `You are a strategic business consultant helping a B2B sales rep build a compelling internal business case for their champion to share with leadership.
+    inputs: [
+      {
+        id: 'company',
+        label: 'Company name',
+        type: 'text',
+        placeholder: 'e.g. Acme Corp',
+        required: true,
+      },
+      {
+        id: 'champion',
+        label: "Champion's name and title",
+        type: 'text',
+        placeholder: 'e.g. James Liu, Head of RevOps',
+        required: true,
+      },
+      {
+        id: 'pain_points',
+        label: 'Key pain points from discovery',
+        type: 'textarea',
+        placeholder: 'e.g. Reps spend 3+ hours on manual CRM updates. Forecast accuracy is around 60%. New hires take 6 months to ramp.',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'outcomes',
+        label: 'Expected outcomes and any ROI metrics discussed',
+        type: 'textarea',
+        placeholder: 'e.g. Targeting 80%+ forecast accuracy, reduce ramp time to 3 months, save ~4 hours/rep/week on admin',
+        required: true,
+        rows: 3,
+      },
+    ],
+    systemPrompt: `You are a strategic business consultant helping a B2B sales rep create an internal business case that their champion can use to justify a purchase to leadership.
 
-Using the information below, write a structured business case document:
+The document must be polished enough for a CFO or CEO to read. No sales language. No jargon. No buzzwords. Write in the champion's voice — this document should look like it came from inside the company, not from a vendor.
 
-**Company:** [COMPANY NAME]
-**Champion:** [CHAMPION NAME & TITLE]
-**Their key pain points:** [LIST 2–3 MAIN PROBLEMS FROM DISCOVERY]
-**Current situation / cost of doing nothing:** [WHAT HAPPENS IF THEY DON'T CHANGE]
-**Expected outcomes with our solution:** [METRICS, EFFICIENCY GAINS, REVENUE IMPACT]
-**Investment level (if known):** [ROUGH COST OR LEAVE BLANK]
-**Timeline:** [WHEN THEY WANT TO SEE RESULTS]
-
-Produce the following sections:
+Use the provided company, champion, pain points, and expected outcomes to write the following:
 
 ## Executive Summary
-2–3 sentences for a C-suite reader. Problem, solution, expected outcome.
+2–3 sentences for a C-suite reader who will skim this first. The problem, the solution, the expected outcome. Clear, factual, no hype.
 
-## Current State & Business Impact
-Describe the current situation and quantify the cost — in time, revenue, risk, or efficiency.
+## The Problem We're Solving
+Describe the current situation in plain language. Quantify the cost where possible — in time, money, risk, or missed opportunity. Use the pain points provided.
+
+## Why Now
+The urgency case. Why this isn't a "we'll revisit it next quarter" situation. Be specific to the business context provided.
 
 ## Proposed Solution
-What we're recommending and why it fits their specific context.
+What's being recommended and why it fits their specific context. Non-technical, outcome-focused language.
 
 ## Expected Return on Investment
-Frame the ROI clearly. Use conservative estimates. Show the maths if numbers were provided.
+Clear ROI framing. Conservative estimates. Show the logic, not just the number. Use any metrics provided; where numbers aren't given, use reasonable ranges and explain the assumptions.
 
-## Strategic Fit
-Why this initiative aligns with their likely business priorities (growth, efficiency, risk reduction, competitive positioning).
-
-## Risk of Inaction
-What they're leaving on the table by delaying.
+## Handling the Hard Questions
+2–3 challenges a CFO or skeptical stakeholder might raise — and how to address each one confidently.
 
 ## Recommended Next Steps
-3 clear actions with owners and a timeline.
+3 clear actions with suggested owners and a proposed timeline.
 
-Write in clear, professional language suitable for a VP or C-suite audience. Avoid jargon. Be specific where numbers exist; use ranges where they don't.`,
+Format this as a clean, professional brief. No bullet lists for the main sections — write in proper paragraphs. The champion should be able to hand this to their leadership team with confidence.`,
   },
   {
     id: '3',
-    slug: 'rfp-response-pro',
-    title: 'RFP Response Pro',
-    description: 'Respond to any RFP section in a fraction of the time. Structured, professional, and tailored to your solution.',
-    body: 'RFPs are time-consuming and repetitive. This prompt helps you respond to any question or section quickly — with responses that are structured, confident, and position your solution clearly. Works best when you paste the RFP question directly into the prompt alongside your product context.',
+    slug: 'rfp-rapid-response',
+    title: 'RFP Rapid Response',
+    hook: 'Turn 4 hours of RFP pain into 20 minutes.',
+    description: 'Paste in any RFP question and get a polished, professional response that sounds like your best writer wrote it.',
+    whyItMatters: "RFPs are soul-destroying. You answer the same questions differently every time, the deadline is always tight, and the answers never feel quite right. Paste in the question, your product context, and what makes you different — get back a polished, confident answer that actually sounds like your company wrote it, plus a shorter version for word-limited responses.",
+    body: 'RFPs are time-consuming and repetitive. This tool generates structured, professional responses to any RFP question — along with an editor\'s note flagging assumptions and a short version for word-limited submissions.',
     useCases: [
-      'Responding to a specific RFP question or section',
+      'Responding to a specific RFP question under time pressure',
       'Drafting an executive summary for a formal proposal',
-      'Turning bullet-point product capabilities into narrative prose',
+      'Turning bullet-point capabilities into polished narrative prose',
     ],
     howToUse: [
-      'Copy the prompt',
-      'Paste it into your AI tool of choice',
-      'Replace the placeholders with the actual RFP question and your product details',
-      'Review and refine — the AI gives you a strong first draft, you add the nuance',
+      'Paste the exact RFP question or section text',
+      'Describe your product and key differentiators',
+      'Generate — you get a full response, a short version, and an editor\'s note',
     ],
     personas: ['se', 'ae'],
-    format: 'prompt',
+    format: 'embedded',
     tags: ['rfp', 'proposal', 'writing', 'enterprise'],
     free: true,
     featured: false,
     publishedAt: '2025-03-05',
-    content: `You are an experienced enterprise solutions consultant writing a formal RFP response on behalf of a B2B technology company.
-
-**RFP Question / Section:**
-[PASTE THE EXACT RFP QUESTION OR SECTION HEADER HERE]
-
-**Our product / solution:**
-[BRIEF DESCRIPTION — WHAT IT DOES, WHO IT'S FOR, KEY CAPABILITIES]
-
-**Key differentiators to weave in:**
-[2–3 THINGS THAT SET YOUR SOLUTION APART]
-
-**Tone:** Professional, confident, and specific. This is a formal procurement process.
+    inputs: [
+      {
+        id: 'rfp_question',
+        label: 'RFP question or section',
+        type: 'textarea',
+        placeholder: 'Paste the exact RFP question or section header here…',
+        required: true,
+        rows: 4,
+      },
+      {
+        id: 'your_product',
+        label: 'Your product and key capabilities',
+        type: 'textarea',
+        placeholder: 'e.g. A workforce management platform for staffing agencies. Key capabilities: real-time scheduling, compliance automation, mobile timesheets, payroll integration.',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'differentiators',
+        label: 'Key differentiators to highlight',
+        type: 'textarea',
+        placeholder: 'e.g. Only platform built natively for the staffing industry. 99.9% uptime SLA. Dedicated implementation team included.',
+        required: false,
+        rows: 2,
+      },
+    ],
+    systemPrompt: `You are an experienced enterprise solutions consultant writing a formal RFP response for a B2B technology company. Your job is to produce a polished, professional answer that directly addresses the question, positions the solution clearly, and reads like it was written by a confident expert — not a sales rep trying to sound impressive.
 
 Write a response that:
-1. Directly addresses the question without fluff
-2. Positions our solution clearly and confidently
-3. Uses specific language (avoid vague terms like "best-in-class" without evidence)
-4. Is structured with clear paragraphs or bullet points where appropriate
-5. Ends with a sentence that ties back to their business outcome
+1. Directly and completely addresses what the question is asking — no preamble, no "Great question!"
+2. Uses specific language — no "best-in-class", "industry-leading", or empty claims without evidence
+3. Structures the answer clearly with paragraphs, bullets, or numbered lists as appropriate to the question type
+4. Ties the answer back to a business outcome for the buyer
+5. Is between 150–350 words unless the question genuinely requires more depth
 
-Target length: 150–300 words unless the question warrants more detail.
+Then provide:
 
-After the response, add a brief [EDITOR NOTE] flagging any assumptions made or areas where more specific information would strengthen the answer.`,
+**Short version** (under 100 words): A condensed version for responses with strict word limits.
+
+**[Editor Note]**:
+- Any assumptions made in this response
+- Specific information that would strengthen this answer if added
+- One alternative framing if the buyer's priorities might be different from what was assumed`,
   },
   {
     id: '4',
-    slug: 'cold-email-generator',
-    title: 'Cold Email Generator',
-    description: 'Write cold outreach emails that get replies — personalised to the prospect\'s role, company, and likely pain points.',
-    body: 'Generic cold emails get ignored. This prompt generates personalised cold outreach for any prospect — with a relevant hook, a clear value proposition, and a low-friction CTA. Designed for high-volume prospecting where quality still matters.',
+    slug: 'cold-sequence-engine',
+    title: 'Cold Sequence Engine',
+    hook: '7 touches. Zero cringe.',
+    description: 'Generate a complete, personalised 7-touch outreach sequence for any prospect — LinkedIn, email, phone, and a breakup message.',
+    whyItMatters: "BDRs spend hours crafting sequences that still sound like everyone else's. This produces a complete 7-touch sequence in 30 seconds — a LinkedIn connection note, two emails, a DM, a direct ask, a phone script, and a breakup message. All consistent, all specific to your persona, and none of them starting with 'I hope this finds you well.'",
+    body: 'Generic outreach gets ignored. This tool generates a full multi-channel sequence personalised to your target persona — from first LinkedIn touch to breakup email. Every message has a distinct angle and moves the conversation forward.',
     useCases: [
-      'Net-new outreach to a target account list',
-      'Re-engaging a cold prospect with a fresh angle',
-      'Writing a sequence of follow-up emails after initial contact',
+      'Building a sequence for a new target persona or vertical',
+      'Refreshing an existing sequence that\'s stopped converting',
+      'Getting a new BDR up and running with a working sequence fast',
     ],
     howToUse: [
-      'Copy the prompt',
-      'Fill in the prospect details and your product context',
-      'Run it through ChatGPT or Claude',
-      'Personalise further with any specific intel you have on the prospect',
+      'Describe who you\'re targeting, what you sell, and any trigger event',
+      'Generate the full 7-touch sequence',
+      'Personalise each message further with specific intel on your prospects',
     ],
     personas: ['bdr'],
-    format: 'prompt',
-    tags: ['cold-outreach', 'email', 'prospecting', 'sequencing'],
+    format: 'embedded',
+    tags: ['cold-outreach', 'sequencing', 'email', 'linkedin', 'prospecting'],
     free: true,
     featured: true,
     publishedAt: '2025-03-05',
-    content: `You are an elite B2B sales development rep writing a cold outreach email.
+    inputs: [
+      {
+        id: 'target_persona',
+        label: 'Who you\'re targeting',
+        type: 'textarea',
+        placeholder: 'e.g. VP of Sales at a Series B SaaS company, 100–500 employees, likely using Salesforce',
+        required: true,
+        rows: 2,
+      },
+      {
+        id: 'your_product',
+        label: 'What you sell and the #1 value for this persona',
+        type: 'textarea',
+        placeholder: 'e.g. A sales coaching platform. #1 value: managers get automatic call summaries and coaching alerts so they can spend time coaching, not listening to recordings.',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'trigger_event',
+        label: 'Trigger event or reason for outreach',
+        type: 'text',
+        placeholder: 'e.g. They just raised Series B, they\'re hiring 8 BDRs, posted about pipeline challenges on LinkedIn',
+        required: false,
+      },
+    ],
+    systemPrompt: `You are an elite B2B sales development rep who writes outreach sequences that get replies. Your sequences are warm, specific, and relevant — they never sound like a template even though they are.
 
-**Prospect details:**
-- Name: [FIRST NAME]
-- Title: [JOB TITLE]
-- Company: [COMPANY NAME]
-- Industry: [INDUSTRY]
-- Company size: [APPROX HEADCOUNT OR REVENUE]
+Write a complete 7-touch outreach sequence for the described prospect persona. Each touch must have a distinct angle, different channel, and different level of ask. Every message should feel like it was written specifically for this type of person.
 
-**My company / product:**
-[WHAT YOU SELL — ONE SENTENCE]
+## Touch 1: LinkedIn Connection Request
+Hard limit: 300 characters including spaces. Warm, specific, no pitch. A genuine reason to connect — reference something real about their role or world. Do NOT say "I'd love to learn more about your experience."
 
-**Key value proposition for this persona:**
-[WHAT PROBLEM YOU SOLVE FOR SOMEONE IN THIS ROLE]
+## Touch 2: First Email — The Hook
+Format: Subject line + body (under 100 words). Lead with a relevant insight or observation about their world, not your product. End with a curiosity-based, low-friction CTA.
 
-**Any specific trigger or personalisation angle (optional):**
-[E.G. RECENT FUNDING, JOB POST, LINKEDIN ACTIVITY, MUTUAL CONNECTION]
+## Touch 3: Second Email — The Evidence
+Format: Subject line + body (under 150 words). A relevant outcome, case study angle, or specific example. One metric if available. Easy ask.
 
-Write a cold email that:
-1. Opens with a personalised, relevant hook (not "I came across your profile")
-2. Gets to the point in 2–3 sentences — what you do and why it matters to them
-3. Includes one specific outcome or metric if possible
-4. Ends with a single, low-friction CTA (not "let's get 30 minutes in the diary")
-5. Is under 100 words total
+## Touch 4: LinkedIn DM
+Under 150 characters. After they've accepted the connection or been connected a while. Reference something specific — their profile, a post, something current. Not a pitch.
 
-After the email, suggest 2 alternative subject lines and a brief note on what makes this angle work for this persona.`,
+## Touch 5: Third Email — The Direct Ask
+Format: Subject line + body (under 100 words). Clear, confident, direct. Specific CTA. Give them an easy out that still moves things forward.
+
+## Touch 6: Phone Script
+30–45 second opening or voicemail script. Sound like a human. What to say, what you want them to do, how to leave a compelling voicemail without rambling.
+
+## Touch 7: The Breakup Email
+Format: Subject line + body (under 80 words). Acknowledge the silence gracefully. Leave a positive impression. Give them an easy way back in. Not passive-aggressive.
+
+After the sequence: write a brief paragraph on the core narrative thread connecting all 7 touches, and one note on how to adapt the sequence if the trigger event changes.`,
   },
   {
     id: '5',
-    slug: 'post-call-summary',
-    title: 'Post-Call Summary',
-    description: 'Turn messy call notes into a clean, shareable summary with next steps — ready to send to your prospect in minutes.',
-    body: 'The 10 minutes after a call are the most valuable in the sales process. This prompt turns raw notes or transcripts into a structured follow-up email: what was discussed, what was agreed, and what happens next. Keeps deals moving and builds credibility with prospects.',
+    slug: 'post-call-packager',
+    title: 'Post-Call Packager',
+    hook: 'From messy notes to polished follow-up in 60 seconds.',
+    description: 'Paste your raw call notes and get a follow-up email, a CRM update, and a next meeting agenda — ready to send.',
+    whyItMatters: "The 10 minutes after a call are the most valuable in the sales process — and the most wasted. Paste in your raw notes, however rough, and get a follow-up email that references specific things said, a CRM update in MEDDIC format, and the agenda for the next meeting. The email goes out while the conversation is still fresh.",
+    body: 'Post-call admin kills deal momentum. This tool turns raw call notes into three ready-to-use outputs: a professional follow-up email, an internal CRM note, and a next meeting agenda.',
     useCases: [
-      'Post-discovery follow-up email',
-      'Internal deal update for your manager or CRM',
-      'Champion-ready summary of a demo or EBC',
+      'Sending a follow-up email immediately after a discovery or demo call',
+      'Updating your CRM without spending 20 minutes writing notes',
+      'Keeping internal stakeholders informed about deal progress',
     ],
     howToUse: [
-      'Immediately after your call, paste your notes or a transcript excerpt into the prompt',
-      'Include the prospect\'s name, company, and meeting type',
-      'Run it through your AI tool',
-      'Send the output (lightly edited) to the prospect within the hour',
+      'Paste your raw notes straight after the call — doesn\'t matter how rough',
+      'Add the prospect name, company, and meeting type',
+      'Generate — send the email, paste the CRM note, save the agenda',
     ],
     personas: ['ae', 'bdr'],
-    format: 'prompt',
-    tags: ['follow-up', 'email', 'crm', 'next-steps'],
+    format: 'embedded',
+    tags: ['follow-up', 'email', 'crm', 'next-steps', 'admin'],
     free: true,
     featured: false,
     publishedAt: '2025-03-08',
-    content: `You are an experienced B2B account executive writing a post-call follow-up.
+    inputs: [
+      {
+        id: 'call_notes',
+        label: 'Your raw call notes',
+        type: 'textarea',
+        placeholder: 'Paste everything — bullet points, half-sentences, stream of consciousness. The messier the better.',
+        required: true,
+        rows: 6,
+      },
+      {
+        id: 'prospect',
+        label: 'Prospect name and company',
+        type: 'text',
+        placeholder: 'e.g. Mark Davies, Acme Corp',
+        required: true,
+      },
+      {
+        id: 'meeting_type',
+        label: 'Meeting type',
+        type: 'select',
+        placeholder: '',
+        required: true,
+        options: ['Discovery call', 'Product demo', 'Executive briefing', 'Follow-up call', 'Negotiation'],
+      },
+    ],
+    systemPrompt: `You are an experienced B2B account executive who is exceptionally good at turning messy call notes into clean, professional output. Speed matters — every minute between the call and the follow-up email counts. A good follow-up sent in 10 minutes beats a perfect one sent in 2 hours.
 
-**Meeting details:**
-- Prospect name: [NAME]
-- Company: [COMPANY]
-- Meeting type: [discovery / demo / EBC / follow-up]
-- Date: [DATE]
+Use the provided call notes to produce three outputs:
 
-**My raw notes from the call:**
-[PASTE YOUR NOTES OR TRANSCRIPT EXCERPT HERE]
-
-**My product / solution:**
-[ONE LINE DESCRIPTION]
-
-Write two things:
-
-## 1. External Follow-Up Email (to send to the prospect)
+## 1. External Follow-Up Email
+To be sent to the prospect immediately after the call.
 - Warm but professional tone
-- Thank them for their time (briefly)
-- Summarise the 3–4 key things discussed
-- Confirm any actions agreed on both sides
-- State the clear next step with a date or timeframe
-- Keep it under 200 words
+- Open with a genuine reference to something specific from the conversation — not "I wanted to follow up on our call today"
+- Cover 2–3 key things discussed — use the prospect's language where possible, not yours
+- Confirm any commitments made on both sides
+- State the next step clearly with a specific action, proposed owner, and timeframe
+- Under 200 words total
+- Subject line included
 
-## 2. Internal CRM Note (for your own records)
-- Bullet format
-- Key pain points uncovered
-- Budget / authority / timeline signals
-- Objections raised
-- Next step and owner
-- Deal risk (if any)
+## 2. Internal CRM Update
+For pipeline hygiene and deal review. Format as clean bullet points under these headers:
+- **Pain points uncovered** (use their language)
+- **Budget signals** (what was said or implied)
+- **Decision-making process** (who else is involved, how they buy)
+- **Timeline** (when they want to be live / make a decision)
+- **Objections / concerns raised**
+- **Competitive landscape** (anything mentioned)
+- **Risk factors**
+- **Next step** (action, owner, date)
 
-Be specific. Use the prospect's own language where it appears in the notes.`,
+## 3. Next Meeting Agenda
+If a follow-up was agreed or implied:
+- Suggested agenda (3–4 bullet points)
+- What you'll cover
+- What you need them to bring, confirm, or prepare before the meeting
+
+If information is missing or unclear from the notes, add a [FLAG] note rather than guessing.`,
   },
   {
     id: '6',
-    slug: 'demo-customiser',
-    title: 'Demo Customiser',
-    description: 'Build a tailored demo narrative for any prospect — so every demo feels built for them, not pulled off the shelf.',
-    body: 'A generic demo is a deal killer. This prompt takes your prospect\'s context and builds a personalised demo script — with the right opening narrative, which features to lead with, which to skip, and how to tie everything back to their specific pain. Built for SEs who do high-stakes demos.',
+    slug: 'demo-director',
+    title: 'Demo Director',
+    hook: 'Stop giving the same demo to everyone.',
+    description: 'Build a tailored demo arc for any prospect — so every demo feels like it was built for them specifically, not pulled off the shelf.',
+    whyItMatters: "A generic demo is a deal killer. The prospect can feel when you're just running your standard flow. This takes what you learned in discovery and builds a tailored demo arc — which features to lead with, which to skip, and exactly how to engineer the moment where they lean forward and say 'wait, can you show me that again?'",
+    body: 'A generic demo is a deal killer. This tool builds a complete, customised demo plan from your discovery findings — with a purpose-built narrative arc, a mapped \'aha moment\', and a disciplined cut list.',
     useCases: [
       'Preparing a customised demo script for a key account',
-      'Planning which features to highlight for a specific persona',
-      'Building a "day in the life" narrative around the prospect\'s workflow',
+      'Deciding which features to lead with for a specific persona',
+      'Engineering a "day in the life" narrative around the prospect\'s exact pain',
     ],
     howToUse: [
-      'Run deal prep first (use the Deal Prep Brief prompt) to get prospect context',
-      'Copy this prompt and fill in the discovery findings',
-      'Let the AI build a demo structure tailored to their pain',
-      'Adapt the flow in your actual demo tool',
+      'Enter the prospect context and pain points from discovery',
+      'Describe who you\'re demoing to and how long you have',
+      'Generate a tailored demo arc — then adapt it in your actual demo tool',
     ],
     personas: ['se', 'ae'],
-    format: 'prompt',
-    tags: ['demo', 'customisation', 'discovery', 'narrative'],
+    format: 'embedded',
+    tags: ['demo', 'customisation', 'discovery', 'narrative', 'se'],
     free: true,
     featured: false,
     publishedAt: '2025-03-10',
-    content: `You are a world-class Sales Engineer preparing a tailored product demo for a key prospect.
+    inputs: [
+      {
+        id: 'company_context',
+        label: 'Company, industry, size, and pain points from discovery',
+        type: 'textarea',
+        placeholder: 'e.g. Acme Corp, staffing industry, 300 employees. Pain: manual timesheet process costing ~8 hrs/week per recruiter. Want to reduce time-to-fill by 20%.',
+        required: true,
+        rows: 4,
+      },
+      {
+        id: 'persona',
+        label: 'Who you\'re demoing to',
+        type: 'text',
+        placeholder: 'e.g. CTO and Head of Operations — technical evaluation, care about integration and data accuracy',
+        required: true,
+      },
+      {
+        id: 'your_product',
+        label: 'What your product does (brief)',
+        type: 'textarea',
+        placeholder: 'e.g. Workforce management platform: scheduling, timesheets, compliance, payroll integration. Key modules: real-time scheduling board, mobile app, automated compliance alerts.',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'demo_length',
+        label: 'Demo length',
+        type: 'select',
+        placeholder: '',
+        required: true,
+        options: ['30 minutes', '45 minutes', '60 minutes'],
+      },
+    ],
+    systemPrompt: `You are a world-class Sales Engineer who has run thousands of enterprise demos. You understand that the worst demo is the one that covers everything — and the best demo builds to one specific moment of clarity.
 
-**Prospect context:**
-- Company: [COMPANY NAME]
-- Key contact: [NAME & TITLE]
-- Industry: [INDUSTRY]
-- Company size: [SIZE]
-- Key pain points uncovered in discovery: [LIST 2–3]
-- Current solution / status quo: [WHAT THEY'RE DOING TODAY]
-- Desired outcome: [WHAT THEY WANT TO ACHIEVE]
-
-**Our product:** [BRIEF DESCRIPTION]
-**Demo duration:** [30 / 45 / 60 minutes]
-
-Build a tailored demo plan with:
+Using the provided prospect context, persona, product description, and demo length, build a complete tailored demo plan:
 
 ## Opening Narrative (2–3 minutes)
-A "day in the life" story from the perspective of someone at their company experiencing the pain. Make it feel like you've been in their building.
+A "day in the life" story from the perspective of someone at their company experiencing the exact pain they described. Make it feel like you've been in their building. This is not a product introduction — it sets up WHY the demo matters before you touch the product. Use specific details from the prospect context.
 
-## Demo Flow
-A sequenced list of what to show and in what order — prioritised by what matters most to this prospect. For each section: what to show, why it matters to them, and what to say.
+## Demo Arc
+A sequenced plan of what to show, in what order, timed for the total demo length. For each section:
+- **What to show** (specific feature or flow)
+- **Why it matters to THIS prospect** — not generic, reference their specific pain
+- **What to say as you show it** — the exact narrative thread
+- **Time allocation**
 
-## Features to Avoid or Deprioritise
-Based on their context, what's likely irrelevant or distracting for this audience.
+## The Aha Moment
+The single moment you want to engineer in this demo — the specific feature, flow, or data point that will make them lean in. How to build to it deliberately. What to say when you get there.
+
+## What to Skip (and Why)
+Features or sections that are likely irrelevant or distracting for this audience. Being disciplined about what NOT to show makes the demo sharper.
 
 ## Proof Points to Weave In
-Relevant customer stories, metrics, or case studies that will resonate with this prospect.
+2–3 specific customer outcomes, metrics, or use cases that will resonate with this prospect's industry, size, or pain profile. How to drop them naturally into the flow.
 
-## Closing / Call to Action
-How to end the demo and what next step to propose.
+## Close and Next Step
+How to end the demo. What question to ask. What to propose as the next step. How to create momentum rather than letting the call end with "we'll be in touch."
 
-Tone: practical and specific. This is a working script, not a presentation deck.`,
+Total planned time should match the requested demo length. Be specific and practical — this is a working plan, not a presentation outline.`,
   },
   {
     id: '7',
-    slug: 'objection-handler',
-    title: 'Objection Handler',
-    description: 'Get sharp, confident responses to any sales objection — with the psychology and the words to use.',
-    body: 'Objections are buying signals — but only if you handle them well. This prompt generates tailored responses to any objection, with the reasoning behind each approach and the exact language to use. Works across price, timing, competition, and internal resistance.',
+    slug: 'objection-flip',
+    title: 'Objection Flip',
+    hook: "Every 'no' has a path through it.",
+    description: 'Paste the exact objection you just heard and get what it actually means, three ways to respond, and the question that unlocks the real issue.',
+    whyItMatters: "Reps freeze or go defensive when they hear a hard objection. They over-explain, offer a discount too early, or give up. Paste in the exact words your prospect used — and get back what they actually mean, three different response approaches, and the one question that usually unlocks what's really going on.",
+    body: 'Objections are buying signals — but only if you handle them well. This tool gives you the psychology behind any objection and the exact words to use in response. Covers price, timing, competition, and internal resistance.',
     useCases: [
-      'Preparing responses before a key negotiation or renewal',
+      'Preparing responses before a key negotiation or renewal meeting',
+      'Getting unstuck when a deal goes quiet after a specific concern is raised',
       'Coaching a junior rep on how to handle a recurring objection',
-      'Getting unstuck when a deal goes quiet after a specific concern',
     ],
     howToUse: [
-      'Type the exact objection the prospect gave you (use their words)',
-      'Add context about where you are in the deal',
-      'Run the prompt',
-      'Choose the approach that fits your relationship with the prospect',
+      'Paste the objection using the prospect\'s exact words',
+      'Select the deal stage and add your product context',
+      'Generate — pick the response approach that fits your relationship',
     ],
     personas: ['ae', 'bdr'],
-    format: 'prompt',
+    format: 'embedded',
     tags: ['objection-handling', 'negotiation', 'closing', 'mindset'],
     free: true,
     featured: true,
     publishedAt: '2025-03-12',
-    content: `You are a senior B2B sales coach helping a rep handle a prospect objection effectively.
+    inputs: [
+      {
+        id: 'objection',
+        label: "The objection — use their exact words",
+        type: 'textarea',
+        placeholder: 'e.g. "We like what you\'ve built but we\'re looking to consolidate our tech stack, not add to it." or "The price is just too high for what we\'re getting."',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'deal_stage',
+        label: 'Deal stage',
+        type: 'select',
+        placeholder: '',
+        required: true,
+        options: ['Early / First meeting', 'Mid / Demo & evaluation', 'Late / Negotiation', 'Renewal / Expansion'],
+      },
+      {
+        id: 'your_product',
+        label: 'What you sell — one line',
+        type: 'text',
+        placeholder: 'e.g. A revenue intelligence platform for enterprise sales teams',
+        required: true,
+      },
+    ],
+    systemPrompt: `You are a senior B2B sales coach helping a rep navigate a difficult prospect objection. Give them practical, specific guidance — not sales theory. Real words they can actually say.
 
-**The objection (use the prospect's exact words if possible):**
-[PASTE THE OBJECTION HERE]
+## What This Objection Actually Means
+The real underlying concern beneath the surface objection. What is the prospect actually worried about? Be specific to the deal stage — an early-stage objection often means something different from the same words said in a late-stage negotiation. What's the gap between what they said and what they likely mean?
 
-**Deal context:**
-- Stage: [early / mid / late / renewal]
-- Relationship with prospect: [new contact / existing relationship]
-- Any previous context on why this objection might be coming up:
-[ANY RELEVANT BACKGROUND]
+## Response Option 1: Empathise and Reframe
+**Strategic angle:** Acknowledge the concern and shift the frame — not to dismiss it but to open a new way of seeing it.
+**Exact words to use:** Write the actual response the rep can say verbatim.
+**When this works:** The specific situation where this approach is most effective.
 
-**My product:** [ONE LINE]
+## Response Option 2: The Diagnostic Question
+**The question:** One specific question that opens up the real issue rather than defending against the surface objection. Phrased naturally, not like an interrogation.
+**What you're trying to uncover:** The insight this question is designed to surface.
+**What to do with the answer:** How to proceed depending on what they say.
 
-Provide:
-
-## Why This Objection Is Happening
-The real underlying concern beneath the surface objection. What is the prospect actually worried about?
-
-## Three Response Approaches
-For each one: the strategic angle, the exact words to use, and when to use this approach.
-
-1. **Empathise and reframe** — acknowledge the concern and shift the perspective
-2. **Probe deeper** — use a question to uncover the real issue
-3. **Direct and confident** — address it head-on with evidence
+## Response Option 3: Direct and Evidence-Based
+**Strategic angle:** Address it head-on with a confident, specific response.
+**Exact words to use:** Write the actual response verbatim. Include a specific proof point or logic — not a vague "our customers see great results."
+**When this works:** The situation where directness is the right move.
 
 ## What Not to Do
-Common mistakes reps make with this specific objection and why they backfire.
+The most common mistake reps make with this specific type of objection, and why it backfires.
 
-## Follow-Up Action
-If the call ends without resolution, what's the best next step to keep the deal alive?
+## If You Leave the Call Without Resolving It
+The best next step — specific enough to actually keep the deal alive rather than just delaying rejection.
 
-Be direct and practical. Give me words I can actually say, not theory.`,
+Tone: direct, experienced, practical. Give them words, not frameworks.`,
   },
   {
     id: '8',
     slug: 'linkedin-outreach',
     title: 'LinkedIn Outreach',
-    description: 'Write connection requests and follow-up messages that actually get accepted and replied to.',
-    body: 'LinkedIn outreach fails because it\'s too salesy too fast. This prompt generates warm, relevant connection requests and follow-up messages that lead with value and build a relationship before pitching. Built for BDRs doing high-volume outreach without sounding like a bot.',
+    hook: 'Connection requests that actually get accepted.',
+    description: 'Write a connection note, a first follow-up, and a second touch that all feel like they came from someone who actually looked at their profile.',
+    whyItMatters: "LinkedIn outreach fails because it's too salesy too fast. The prospect knows in three seconds whether you're a real person or a bot with a quota. Paste in what you know about them — their recent activity, their role, anything specific — and get three messages that feel genuinely personal.",
+    body: 'LinkedIn outreach fails because it\'s too salesy too fast. This tool generates warm, relevant connection requests and follow-up messages that lead with genuine interest and build a relationship before pitching.',
     useCases: [
       'Sending connection requests to cold prospects at target accounts',
-      'Following up after a connection accepts',
+      'Following up after a connection accepts with something worth reading',
       'Re-engaging a prospect who went quiet after a LinkedIn exchange',
     ],
     howToUse: [
-      'Find the prospect\'s profile and note their role, company, and any recent activity',
-      'Fill in the prompt with their details',
-      'Run it through your AI tool',
-      'Personalise further based on anything specific you see on their profile',
+      'Note the prospect\'s name, title, and anything specific from their profile',
+      'Enter what you sell and why you\'re reaching out',
+      'Generate three messages — personalise further before sending',
     ],
     personas: ['bdr'],
-    format: 'prompt',
+    format: 'embedded',
     tags: ['linkedin', 'social-selling', 'prospecting', 'connection'],
     free: true,
     featured: false,
     publishedAt: '2025-03-12',
-    content: `You are an expert in B2B social selling and LinkedIn outreach.
+    inputs: [
+      {
+        id: 'prospect',
+        label: "Prospect's name, title, and company",
+        type: 'text',
+        placeholder: 'e.g. Emma Walsh, Head of Talent Acquisition, Acme Corp',
+        required: true,
+      },
+      {
+        id: 'profile_notes',
+        label: 'What you noticed on their profile',
+        type: 'textarea',
+        placeholder: 'e.g. Recently posted about the challenges of hiring at pace. Just moved from in-house to agency side. Commented on a thread about AI in recruitment. University of Bristol grad.',
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'your_role',
+        label: 'Your name, title, and what you sell',
+        type: 'text',
+        placeholder: 'e.g. Tom Reed, BDR at TalentFlow — we help agencies reduce time-to-place by 30%',
+        required: true,
+      },
+    ],
+    systemPrompt: `You are an expert in B2B social selling who knows that the difference between a LinkedIn message that gets ignored and one that gets a reply is specificity. Nobody replies to something that could have been sent to 200 other people.
 
-**Prospect:**
-- Name: [FIRST NAME]
-- Title: [JOB TITLE]
-- Company: [COMPANY]
-- Something relevant from their profile or recent activity: [E.G. RECENT POST, JOB CHANGE, SHARED CONNECTION, MUTUAL INTEREST]
+Write three LinkedIn messages for this specific outreach:
 
-**My role:** [YOUR TITLE]
-**My company / what I sell:** [ONE LINE]
-**Why I'm reaching out to this persona specifically:** [WHAT PROBLEM YOU SOLVE FOR THEM]
+## Message 1: Connection Request Note
+**Hard limit: 300 characters including spaces — this is non-negotiable.**
+- Reference something real and specific from their profile — not their job title
+- Warm and human, not formal
+- No pitch. Just a genuine reason to connect.
+- Does NOT start with "I came across your profile" or "I'd love to connect"
+- Write the message itself, then in brackets note the character count
 
-Write three things:
+## Message 2: First Follow-Up (sent 1–2 days after they accept)
+- Under 150 words
+- Lead with a relevant insight, question, or observation about their world — not your product
+- Mention what you do naturally in one sentence, embedded in context — not as a pitch
+- No hard ask. Conversational, curious, not transactional.
+- After the message: one sentence on why this angle works for this specific person
 
-## 1. Connection Request Note (300 character limit)
-Short, warm, and specific. Reference something real. No pitch. Just a genuine reason to connect.
+## Message 3: Second Follow-Up (sent 5–7 days later with no reply)
+- Under 100 words
+- Different angle from message 2 — don't repeat yourself
+- Acknowledge the silence lightly without being weird about it
+- One clear, low-friction CTA — not "let's get 30 minutes in"
+- After the message: one sentence on the rationale
 
-## 2. First Follow-Up Message (after they accept)
-Sent 1–2 days after connection. Lead with value or a relevant insight. Soft mention of what you do. No hard ask.
-
-## 3. Second Follow-Up Message (if no reply after 5–7 days)
-Light touch. Different angle. One clear, low-friction CTA.
-
-For each message: include the message itself and a brief note on why this approach works for this persona.`,
+For all three: avoid "I hope this finds you well", "I came across your profile", "reaching out because", and any opener that starts with "I".`,
   },
   {
     id: '9',
-    slug: 'champion-enablement-brief',
-    title: 'Champion Enablement Brief',
-    description: 'Give your champion everything they need to sell internally — a one-page brief they can use without you in the room.',
-    body: 'Most deals are won or lost in the internal meetings you\'re never invited to. This prompt creates a champion enablement brief — a clear, concise document your champion can use to justify the decision to their leadership. Covers the problem, the solution, the ROI, and how to handle pushback.',
+    slug: 'champion-activator',
+    title: 'Champion Activator',
+    hook: 'Turn your champion into your best closer.',
+    description: "Generate everything your champion needs to sell internally — a business brief, an internal email they can forward, and talking points for the exec meeting.",
+    whyItMatters: "Most deals are won or lost in the internal meetings you're never invited to. Your champion is probably not a natural salesperson — they need a document they can hand to their CFO without it looking like it came from a vendor, talking points that make them sound like they own this decision, and an email they can forward that doesn't scream 'the sales rep wrote this for me.'",
+    body: "Multi-threading is where most deals are won or lost. This tool gives your champion everything they need to sell internally — in their voice, not yours.",
     useCases: [
-      'Arming a champion before an internal stakeholder meeting',
-      'Providing justification material ahead of a budget committee',
-      'Supporting a champion who is new to their role and needs internal credibility',
+      'Arming a champion before a budget committee or executive sign-off meeting',
+      'Helping a champion who is strong technically but uncomfortable with financial justification',
+      'Supporting a new champion who needs to build internal credibility fast',
     ],
     howToUse: [
-      'Fill in what you know from discovery about the business case',
-      'Run the prompt to generate the brief',
-      'Share the output as a clean PDF or doc with your champion',
-      'Walk through it together on a call before their internal meeting',
+      "Enter your champion's context and the key decision-makers they need to convince",
+      'Add the pain points and expected outcomes from your discovery',
+      "Generate — then walk through the output with your champion on a call before their internal meeting",
     ],
     personas: ['ae'],
-    format: 'prompt',
-    tags: ['champion', 'internal-selling', 'enterprise', 'stakeholder'],
+    format: 'embedded',
+    tags: ['champion', 'internal-selling', 'enterprise', 'stakeholder', 'multithreading'],
     free: true,
     featured: false,
     publishedAt: '2025-03-15',
-    content: `You are a strategic sales consultant creating a champion enablement brief — a one-page document a buyer can use to sell internally on behalf of your solution.
+    inputs: [
+      {
+        id: 'champion',
+        label: "Champion's name, title, and company",
+        type: 'text',
+        placeholder: 'e.g. Rachel Kim, Head of Sales Operations, Acme Corp',
+        required: true,
+      },
+      {
+        id: 'problem',
+        label: "The problem they're solving — in their words if possible",
+        type: 'textarea',
+        placeholder: "e.g. Sales team spending too much time on manual reporting. Forecast accuracy is around 55%. Leadership has no visibility into deal health until it's too late.",
+        required: true,
+        rows: 3,
+      },
+      {
+        id: 'roi_metrics',
+        label: 'Expected outcomes and any ROI metrics discussed',
+        type: 'textarea',
+        placeholder: 'e.g. Target 80%+ forecast accuracy, save 5+ hrs/week per rep on reporting, reduce sales cycle by 15%',
+        required: true,
+        rows: 2,
+      },
+      {
+        id: 'key_stakeholders',
+        label: 'Key decision-makers your champion needs to convince',
+        type: 'text',
+        placeholder: 'e.g. CFO (focused on ROI), CRO (focused on pipeline visibility), IT (focused on security and integration)',
+        required: false,
+      },
+    ],
+    systemPrompt: `You are a strategic sales consultant helping a B2B rep arm their internal champion to sell on their behalf. Everything you produce must be written in the champion's voice — not the vendor's. The moment it sounds like marketing or sales copy, it loses credibility.
 
-**Deal context:**
-- Champion name & title: [NAME, TITLE]
-- Company: [COMPANY]
-- The problem they're solving: [2–3 SENTENCE DESCRIPTION]
-- Current state / cost of inaction: [WHAT'S HAPPENING NOW AND WHAT IT'S COSTING THEM]
-- Proposed solution: [WHAT YOU'RE RECOMMENDING]
-- Expected outcomes / ROI: [METRICS OR ESTIMATED IMPACT]
-- Key stakeholders who will scrutinise this: [E.G. CFO, CTO, LEGAL]
-- Likely internal objections: [1–2 OBJECTIONS THE CHAMPION MIGHT FACE]
+Produce three things:
 
-Write a champion enablement brief with:
+## 1. Internal Business Brief (1–2 pages)
+A document the champion can share with leadership and include in a budget request.
 
-## The Problem (2–3 sentences)
-Written in plain language that resonates with a senior leadership audience.
+Structure:
+- **The Problem** (2–3 sentences in plain language — the business impact, not the technical pain)
+- **Why Now** (the urgency case — what changes if this waits another quarter)
+- **Proposed Solution** (non-technical, outcome-focused, 1 paragraph)
+- **Expected Return** (conservative ROI framing — show the logic, not just the number)
+- **Recommended Next Steps** (3 clear actions with owners and suggested timeline)
 
-## Why Now
-The urgency case — why this isn't a "we'll look at it next year" situation.
+Write in clean paragraphs. No bullet lists for the main narrative. This is a professional brief, not a slide deck.
 
-## The Proposed Solution
-What's being recommended, in non-technical language.
+## 2. Internal Forwarding Email
+An email the champion can send to their leadership team to introduce the initiative.
+- Subject line included
+- 150 words or fewer
+- Written entirely in the champion's voice — should look like it came from them, not from a vendor
+- Frames the initiative as their idea, with them owning the recommendation
+- Ends with a clear ask (e.g. get on the calendar for a 30-minute overview)
 
-## Expected Return
-Clear ROI framing. Use conservative numbers. Show the logic.
-
-## Handling the Hard Questions
-For each likely objection: the concern, and how to address it confidently.
-
-## Recommended Decision
-A clear, confident recommendation with proposed next steps.
-
-Format this as a clean, professional brief — not a sales document. The champion should be able to share this with their CFO without embarrassment.`,
+## 3. Talking Points for the Executive Meeting
+5–6 bullet points the champion can use when presenting or fielding questions from leadership.
+- Each point is 1–2 sentences max
+- Covers: the problem, the why now, the ROI logic, the risk of inaction, and the recommended decision
+- Written in plain language a non-technical executive can immediately understand
+- For each point, add a [Coach note] in brackets with a tip on how to deliver it confidently`,
   },
   {
     id: '10',
-    slug: 'discovery-question-bank',
-    title: 'Discovery Question Bank',
-    description: 'A library of sharp, open-ended discovery questions organised by persona, pain category, and deal stage.',
-    body: 'Great discovery is the difference between a deal that closes and one that stalls. This question bank gives you a structured library of discovery questions for any situation — organised by who you\'re talking to, what you\'re trying to uncover, and where you are in the sales cycle.',
+    slug: 'icp-firing-squad',
+    title: 'ICP Firing Squad',
+    hook: 'Stop pursuing deals that were never going to close.',
+    description: 'Paste anything about a company — a job posting, LinkedIn description, news article, or CRM note — and get an ICP score with clear reasoning and a ready-made first message.',
+    whyItMatters: "The biggest thing killing your pipeline isn't your pitch — it's the leads you're spending hours on that were never a fit. Paste in anything about a prospect company and get a clear ICP score, the specific green flags and red flags, and if they ARE a fit, the exact first message to send. If they're not — what a better version of this lead would look like.",
+    body: "Pipeline quality is the single biggest lever in sales performance. This tool scores any prospect against your ICP in seconds — with clear reasoning, specific signals, and a ready-made first outreach if they're a good fit.",
     useCases: [
-      'Prepping for a first discovery call with a new persona',
-      'Getting unstuck when a discovery call isn\'t going deep enough',
-      'Training a new AE or SE on discovery fundamentals',
+      'Quickly qualifying a list of accounts before starting outreach',
+      'Sense-checking a lead that\'s been sitting in the pipeline too long',
+      'Training a new BDR on what good and bad fit looks like with live examples',
     ],
     howToUse: [
-      'Use the prompt to generate a tailored question bank for a specific deal',
-      'Or browse the categories below for ready-to-use questions',
-      'Pick 5–7 questions to guide your call — don\'t use them all',
-      'Listen more than you talk',
+      'Paste anything about the company — the more context the better',
+      'Describe your ICP so the tool can score accurately against your specific criteria',
+      'Generate — get a score, the reasoning, and a first message if they qualify',
     ],
-    personas: ['ae', 'se'],
-    format: 'prompt',
-    tags: ['discovery', 'questions', 'qualification', 'meddic'],
+    personas: ['bdr', 'ae'],
+    format: 'embedded',
+    tags: ['icp', 'prospecting', 'qualification', 'pipeline-quality'],
     free: true,
     featured: false,
     publishedAt: '2025-03-15',
-    content: `You are a B2B sales coach helping a rep prepare for a discovery call.
+    inputs: [
+      {
+        id: 'company_info',
+        label: 'Everything you know about the company',
+        type: 'textarea',
+        placeholder: 'Paste anything — a job posting, LinkedIn company page, news article, website snippet, CRM notes. The more context, the more accurate the score.',
+        required: true,
+        rows: 5,
+      },
+      {
+        id: 'your_icp',
+        label: 'Your ideal customer profile',
+        type: 'textarea',
+        placeholder: 'e.g. B2B SaaS companies, 100–500 employees, Series A–C funded, 20+ person sales team, currently using Salesforce, struggling with forecast accuracy or rep ramp time',
+        required: true,
+        rows: 3,
+      },
+    ],
+    systemPrompt: `You are a sharp B2B sales strategist who specialises in pipeline quality. Your job is to help reps quickly decide whether a prospect is worth pursuing — and give them a clear, honest verdict backed by specific reasoning.
 
-**Prospect context:**
-- Contact title / persona: [JOB TITLE]
-- Company: [COMPANY NAME]
-- Industry: [INDUSTRY]
-- Likely pain area: [E.G. PIPELINE GENERATION / FORECAST ACCURACY / ONBOARDING / EFFICIENCY]
-- Deal stage: [FIRST CALL / FOLLOW-UP DISCOVERY / TECHNICAL DISCOVERY]
-- My product category: [E.G. CRM / SALES ENABLEMENT / HR TECH / DATA PLATFORM]
+Analyse the provided company information against the ideal customer profile (ICP) description.
 
-Generate a tailored discovery question bank with the following sections:
+## ICP Score: [X/10]
+A single number, clearly stated at the top. Follow immediately with one sentence verdict: what does this score mean in plain terms?
 
-## Situation Questions (3–5)
-Understand the current state — what they're doing today, their team structure, and processes.
+## Why They Score This Way
+4–5 specific reasons based on the information provided. Reference actual details from the company description — not generic ICP criteria. Be direct: what matches well, what doesn't, what's unclear.
 
-## Problem Questions (4–6)
-Uncover the pain — what's not working, what's costing them, what's frustrating the team.
+## Green Flags
+Specific signals from the company description that suggest strong fit, high buying intent, or urgency. Only include what's actually in the information provided — don't invent signals.
 
-## Implication Questions (3–5)
-Explore the downstream impact — what happens because of this problem, who else is affected, what's the cost.
+## Red Flags
+Specific signals that suggest weak fit, low urgency, likely objections, or waste of time. Same rule — only what's actually evidenced.
 
-## Vision Questions (2–3)
-Understand what success looks like — what they'd love to have, how they'd measure improvement.
+## If They ARE a Fit (score 7+): First Outreach Message
+Write the exact first message to send — email or LinkedIn, your call based on context. Under 100 words. Specific to this company — reference something real from the description. Strong hook, clear value, low-friction CTA. Subject line included if email.
 
-## Qualification Questions (2–3)
-Budget, authority, timeline, and decision process — phrased naturally, not like a checklist.
+## If They're NOT a Strong Fit (score below 7): What Better Looks Like
+Based on this example, describe what a stronger version of this prospect would look like — 3–4 specific characteristics that would push this from a weak lead to a strong one. Actionable criteria the rep can use to improve their prospecting list.
 
-For each question: provide the question and a brief note on what you're trying to uncover with it.
-
-Prioritise questions that will generate insight, not just confirm what you already know.`,
+Be direct and honest. Reps don't need a gentle score — they need to know whether to pursue this or move on.`,
   },
 ];
 

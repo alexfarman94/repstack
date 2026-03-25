@@ -10,7 +10,7 @@ export const PERSONA_LABELS: Record<Persona, string> = {
 export const FORMAT_LABELS: Record<Format, string> = {
   prompt: 'Prompt',
   gpt: 'GPT / Gem',
-  embedded: 'Try it',
+  embedded: 'Live',
   download: 'Download',
 };
 
@@ -21,11 +21,23 @@ export const FORMAT_ICONS: Record<Format, string> = {
   download: '📥',
 };
 
+export interface ToolInput {
+  id: string;
+  label: string;
+  type: 'textarea' | 'select' | 'text';
+  placeholder: string;
+  required: boolean;
+  rows?: number;
+  options?: string[];
+}
+
 export interface Tool {
   id: string;
   slug: string;
   title: string;
+  hook: string;
   description: string;
+  whyItMatters: string;
   body: string;
   useCases: string[];
   howToUse: string[];
@@ -33,6 +45,8 @@ export interface Tool {
   format: Format;
   tags: string[];
   free: boolean;
+  inputs?: ToolInput[];
+  systemPrompt?: string;
   content?: string;
   externalUrl?: string;
   downloadUrl?: string;

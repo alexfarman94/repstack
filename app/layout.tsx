@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Rep Stack — AI tools built for salespeople',
-  description: 'Copy-paste prompts, GPTs, and templates for Account Executives, BDRs, and Sales Engineers. Built by someone who ships AI for a living.',
+  title: 'Rep Stack — Your unfair advantage in every deal',
+  description: 'Live AI tools for Account Executives, BDRs, and Sales Engineers. Paste your real situation. Get something ready to use in seconds.',
 };
 
 export default function RootLayout({
