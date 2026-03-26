@@ -7,16 +7,16 @@ export default function SignInPage() {
         appearance={{
           elements: {
             rootBox: 'mx-auto',
-            card: 'bg-[#141416] border border-white/[0.08] shadow-xl shadow-black/40',
-            headerTitle: 'text-white',
-            headerSubtitle: 'text-stone-400',
-            formFieldLabel: 'text-stone-300',
+            card: 'bg-white border border-slate-200 shadow-xl shadow-black/5 rounded-2xl',
+            headerTitle: 'text-slate-900',
+            headerSubtitle: 'text-slate-500',
+            formFieldLabel: 'text-slate-700',
             formFieldInput:
-              'bg-white/[0.05] border-white/[0.1] text-white placeholder-stone-600 focus:border-indigo-500/60',
-            formButtonPrimary: 'bg-indigo-600 hover:bg-indigo-500 text-white',
-            footerActionLink: 'text-indigo-400 hover:text-indigo-300',
-            identityPreviewText: 'text-stone-300',
-            identityPreviewEditButton: 'text-indigo-400',
+              'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/20',
+            formButtonPrimary: 'bg-indigo-600 hover:bg-indigo-700 text-white',
+            footerActionLink: 'text-indigo-600 hover:text-indigo-700',
+            identityPreviewText: 'text-slate-600',
+            identityPreviewEditButton: 'text-indigo-600 hover:text-indigo-700',
           },
         }}
       />

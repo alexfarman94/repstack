@@ -14,8 +14,8 @@ export default function ToolsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
       <div className="mb-10">
-        <h1 className="text-3xl font-bold text-white mb-3">All tools</h1>
-        <p className="text-stone-400">
+        <h1 className="text-3xl font-bold text-slate-900 mb-3">All tools</h1>
+        <p className="text-slate-500">
           Filter by role or format. Fill in your context, hit Generate, and get something ready to use.
         </p>
       </div>

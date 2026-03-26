@@ -100,24 +100,24 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
     <div className="space-y-6">
       {/* Account selector */}
       {accounts.length > 0 && (
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 space-y-2">
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm px-5 py-4 space-y-2">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-stone-300">Account context</label>
+            <label className="text-sm font-medium text-slate-700">Opportunity context</label>
             {accountId && (
               <span className="text-[10px] font-medium bg-green-500/10 text-green-400 px-1.5 py-0.5 rounded">
-                KB loaded
+                Documents loaded
               </span>
             )}
           </div>
-          <p className="text-xs text-stone-600">
-            Select an account to automatically inject its documents as context.
+          <p className="text-xs text-slate-500">
+            Select an opportunity to automatically inject its documents as context.
           </p>
           <select
             value={accountId}
             onChange={(e) => setAccountId(e.target.value)}
-            className="w-full rounded-lg border border-white/[0.08] bg-[#0c0c0e] px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="">— No account —</option>
+            <option value="">— No opportunity —</option>
             {accounts.map((a) => (
               <option key={a.id} value={a.id}>
                 {a.company_name}
@@ -129,7 +129,7 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
 
       {/* Input fields */}
       {inputs.length > 0 && (
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5 space-y-4">
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-5 space-y-4">
           {inputs.map((inp) => (
             <InputField
               key={inp.id}
@@ -144,9 +144,9 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
 
       {/* No inputs — pure KB agent */}
       {inputs.length === 0 && (
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4">
-          <p className="text-sm text-stone-500">
-            This agent runs directly from knowledge base context. Select an account above and hit Run.
+        <div className="rounded-xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
+          <p className="text-sm text-slate-600">
+            This agent runs directly from your opportunity documents context. Select an opportunity above and hit Run.
           </p>
         </div>
       )}
@@ -157,13 +157,13 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
           <button
             onClick={handleRun}
             disabled={!isValid && inputs.length > 0}
-            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-2.5 text-sm transition-colors"
           >
             ⚡ Run agent
           </button>
         )}
         {isRunning && (
-          <div className="inline-flex items-center gap-2 text-sm text-stone-400">
+          <div className="inline-flex items-center gap-2 text-sm text-slate-500">
             <span className="w-3 h-3 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
             {status === 'loading' ? 'Starting…' : 'Generating…'}
           </div>
@@ -171,7 +171,7 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
         {hasOutput && !isRunning && (
           <button
             onClick={reset}
-            className="text-sm text-stone-400 hover:text-white transition-colors"
+            className="text-sm text-slate-500 hover:text-slate-900 transition-colors font-medium"
           >
             ↺ Run again
           </button>
@@ -180,20 +180,20 @@ export function AgentRunner({ agentId, inputs, accounts }: AgentRunnerProps) {
 
       {/* Error */}
       {status === 'error' && errorMsg && (
-        <p className="text-sm text-red-400">{errorMsg}</p>
+        <p className="text-sm text-red-600">{errorMsg}</p>
       )}
 
       {/* Output */}
       {hasOutput && (
-        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06]">
-            <span className="text-xs font-semibold text-stone-500 uppercase tracking-widest">Output</span>
+        <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Output</span>
             <CopyButton text={output} />
           </div>
           <div className="px-5 py-4">
             <div
               ref={outputRef}
-              className="text-sm text-stone-200 whitespace-pre-wrap leading-relaxed font-mono"
+              className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed font-mono"
             >
               {output}
               {isRunning && (
@@ -220,10 +220,10 @@ function InputField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-medium text-stone-300">
+      <label className="text-sm font-medium text-slate-700">
         {input.label}
         {!input.required && (
-          <span className="ml-1.5 text-stone-600 font-normal text-xs">(optional)</span>
+          <span className="ml-1.5 text-slate-500 font-normal text-xs">(optional)</span>
         )}
       </label>
       {input.type === 'textarea' ? (
@@ -233,7 +233,7 @@ function InputField({
           placeholder={input.placeholder}
           rows={input.rows ?? 4}
           disabled={disabled}
-          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2.5 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-y disabled:opacity-50"
+          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y disabled:opacity-50"
         />
       ) : (
         <input
@@ -242,7 +242,7 @@ function InputField({
           onChange={(e) => onChange(e.target.value)}
           placeholder={input.placeholder}
           disabled={disabled}
-          className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
+          className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
         />
       )}
     </div>

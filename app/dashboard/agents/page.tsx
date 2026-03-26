@@ -17,29 +17,29 @@ export default async function AgentsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">My agents</h1>
-          <p className="text-stone-400 mt-1 text-sm">
-            Custom AI tools you&apos;ve built. Each one can run against any account in your knowledge base.
+          <h1 className="text-2xl font-bold text-slate-900">Agents</h1>
+          <p className="text-slate-500 mt-1 text-sm">
+            Custom AI tools you&apos;ve built. Each one can run against any opportunity in your pipeline.
           </p>
         </div>
         <Link
           href="/dashboard/agents/new"
-          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3 py-2 text-sm transition-colors shrink-0"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-3 py-2 text-sm transition-colors shrink-0"
         >
-          <span className="text-lg leading-none">+</span> New agent
+          <span className="text-lg leading-none">+</span> Build new
         </Link>
       </div>
 
       {!agents?.length ? (
-        <div className="rounded-xl border border-dashed border-white/[0.12] bg-white/[0.02] p-10 text-center">
-          <p className="text-stone-300 font-medium">No agents yet</p>
-          <p className="text-stone-500 text-sm mt-2 max-w-sm mx-auto">
+        <div className="rounded-xl border border-dashed border-slate-200 bg-white p-10 text-center">
+          <p className="text-slate-900 font-medium">No agents yet</p>
+          <p className="text-slate-500 text-sm mt-2 max-w-sm mx-auto">
             Build a custom agent with plain-English instructions and optional input fields.
-            Run it against any account in your knowledge base — no manual pasting required.
+            Run it against any opportunity in your pipeline — no manual pasting required.
           </p>
           <Link
             href="/dashboard/agents/new"
-            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 text-sm transition-colors"
+            className="mt-5 inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 text-sm transition-colors"
           >
             Build your first agent
           </Link>
@@ -50,19 +50,19 @@ export default async function AgentsPage() {
             <Link
               key={agent.id}
               href={`/dashboard/agents/${agent.id}`}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] px-5 py-4 hover:bg-white/[0.04] transition-colors flex flex-col"
+              className="rounded-xl border border-slate-200 bg-white px-5 py-4 hover:bg-slate-50 transition-colors shadow-sm flex flex-col"
             >
               <div className="flex items-start justify-between gap-2">
-                <p className="font-medium text-white">{agent.name}</p>
-                <span className="text-xs text-stone-600 shrink-0">
+                <p className="font-medium text-slate-900">{agent.name}</p>
+                <span className="text-xs text-slate-500 shrink-0">
                   {new Date(agent.created_at).toLocaleDateString()}
                 </span>
               </div>
               {agent.description && (
-                <p className="text-sm text-stone-500 mt-1.5 line-clamp-2">{agent.description}</p>
+                <p className="text-sm text-slate-600 mt-1.5 line-clamp-2">{agent.description}</p>
               )}
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-indigo-400">Run agent →</span>
+                <span className="text-xs text-indigo-600">Run agent →</span>
               </div>
             </Link>
           ))}

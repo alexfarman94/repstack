@@ -103,7 +103,8 @@ export function UploadForm({
       if (accountId) {
         router.push(`/dashboard/accounts/${accountId}`);
       } else {
-        router.push('/dashboard/knowledge-base');
+        // Documents are managed inside Opportunities.
+        router.push('/dashboard/accounts');
       }
       router.refresh();
     } catch (err) {
@@ -115,7 +116,7 @@ export function UploadForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Mode toggle */}
-      <div className="flex rounded-lg border border-white/[0.08] overflow-hidden w-fit">
+      <div className="flex rounded-lg border border-slate-200 overflow-hidden w-fit">
         {(['paste', 'file'] as Mode[]).map((m) => (
           <button
             key={m}
@@ -123,8 +124,8 @@ export function UploadForm({
             onClick={() => setMode(m)}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               mode === m
-                ? 'bg-white/[0.08] text-white'
-                : 'text-stone-500 hover:text-stone-300'
+                ? 'bg-indigo-600 text-white'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             {m === 'paste' ? 'Paste text' : 'Upload file'}
@@ -132,28 +133,28 @@ export function UploadForm({
         ))}
       </div>
 
-      <div className="space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+      <div className="space-y-4 rounded-xl border border-slate-200 bg-white shadow-sm p-5">
         {/* Title */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">
-            Title <span className="text-stone-600 font-normal">(optional)</span>
+          <label className="text-sm font-medium text-slate-700">
+            Title <span className="text-slate-500 font-normal">(optional)</span>
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Q1 Discovery call with Acme"
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
         {/* Doc type */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">Document type</label>
+          <label className="text-sm font-medium text-slate-700">Document type</label>
           <select
             value={docType}
             onChange={(e) => setDocType(e.target.value)}
-            className="w-full rounded-lg border border-white/[0.08] bg-[#0c0c0e] px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
             {DOC_TYPES.map((t) => (
               <option key={t.value} value={t.value}>
@@ -166,13 +167,13 @@ export function UploadForm({
         {/* Account */}
         {accounts.length > 0 && (
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-stone-300">
-              Attach to account <span className="text-stone-600 font-normal">(optional)</span>
+            <label className="text-sm font-medium text-slate-700">
+              Attach to account <span className="text-slate-500 font-normal">(optional)</span>
             </label>
             <select
               value={accountId}
               onChange={(e) => setAccountId(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.08] bg-[#0c0c0e] px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             >
               <option value="">— No account —</option>
               {accounts.map((a) => (
@@ -187,13 +188,13 @@ export function UploadForm({
         {/* Content or file */}
         {mode === 'paste' ? (
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-stone-300">Content</label>
+            <label className="text-sm font-medium text-slate-700">Content</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={10}
               placeholder="Paste your call transcript, meeting notes, or any account context here…"
-              className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-y"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
             />
             {content.trim().length > 0 && content.trim().length < 50 && (
               <p className="text-xs text-amber-500">
@@ -205,7 +206,7 @@ export function UploadForm({
           <div
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
-            className="rounded-lg border-2 border-dashed border-white/[0.10] hover:border-white/[0.20] transition-colors p-8 text-center cursor-pointer"
+            className="rounded-lg border-2 border-dashed border-slate-200 hover:border-slate-300 transition-colors p-8 text-center cursor-pointer bg-slate-50"
             onClick={() => fileRef.current?.click()}
           >
             <input
@@ -217,34 +218,34 @@ export function UploadForm({
             />
             {file ? (
               <div>
-                <p className="text-sm font-medium text-white">{file.name}</p>
-                <p className="text-xs text-stone-500 mt-1">
+                <p className="text-sm font-medium text-slate-900">{file.name}</p>
+                <p className="text-xs text-slate-500 mt-1">
                   {(file.size / 1024).toFixed(0)} KB · Click to change
                 </p>
               </div>
             ) : (
               <div>
-                <p className="text-stone-400 text-sm">Drop a file here, or click to browse</p>
-                <p className="text-stone-600 text-xs mt-1">Supports .txt and .docx · Max 5 MB</p>
+                <p className="text-slate-500 text-sm">Drop a file here, or click to browse</p>
+                <p className="text-slate-600 text-xs mt-1">Supports .txt and .docx · Max 5 MB</p>
               </div>
             )}
           </div>
         )}
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={!canSubmit() || loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
         >
           {loading ? 'Saving…' : 'Save document'}
         </button>
         <a
-          href={accountId ? `/dashboard/accounts/${accountId}` : '/dashboard/knowledge-base'}
-          className="inline-flex items-center rounded-lg border border-white/[0.08] text-stone-400 hover:text-white px-4 py-2 text-sm transition-colors"
+          href={accountId ? `/dashboard/accounts/${accountId}` : '/dashboard/accounts'}
+          className="inline-flex items-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 px-4 py-2 text-sm transition-colors"
         >
           Cancel
         </a>

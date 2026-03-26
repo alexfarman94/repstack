@@ -14,35 +14,38 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <ClerkProvider>
-      <html lang="en">
-        <body className="min-h-screen bg-[#0c0c0e] text-stone-100 antialiased">
-          <NavBar />
-          <main>{children}</main>
-          <footer className="border-t border-white/[0.06] mt-24 py-10">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <p className="text-sm text-stone-500">
-                  Built by{' '}
-                  <a
-                    href="https://alexfarman.me"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-stone-300 hover:text-white transition-colors"
-                  >
-                    Alex Farman
-                  </a>{' '}
-                  — GTM AI Strategist
-                </p>
-              </div>
-              <p className="text-xs text-stone-600">
-                © {new Date().getFullYear()} Rep Stack. All tools free to use.
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  const hasClerkKey = Boolean(clerkPublishableKey);
+
+  const content = (
+    <html lang="en">
+      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased">
+        <NavBar />
+        <main>{children}</main>
+        <footer className="border-t border-slate-200 mt-24 py-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <p className="text-sm text-slate-500">
+                Built by{' '}
+                <a
+                  href="https://alexfarman.me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-700 hover:text-slate-900 transition-colors"
+                >
+                  Alex Farman
+                </a>{' '}
+                — GTM AI Strategist
               </p>
             </div>
-          </footer>
-        </body>
-      </html>
-    </ClerkProvider>
+            <p className="text-xs text-slate-400">© {new Date().getFullYear()} Rep Stack. All tools free to use.</p>
+          </div>
+        </footer>
+      </body>
+    </html>
   );
+
+  if (!hasClerkKey) return content;
+
+  return <ClerkProvider publishableKey={clerkPublishableKey}>{content}</ClerkProvider>;
 }

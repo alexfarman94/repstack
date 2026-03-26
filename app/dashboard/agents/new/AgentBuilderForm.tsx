@@ -73,38 +73,38 @@ export function AgentBuilderForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+      <div className="space-y-4 rounded-xl border border-slate-200 bg-white shadow-sm p-5">
         {/* Name */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">Agent name</label>
+          <label className="text-sm font-medium text-slate-700">Agent name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Discovery Call Debrief"
             required
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
         {/* Description */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">
-            Short description <span className="text-stone-600 font-normal">(optional)</span>
+          <label className="text-sm font-medium text-slate-700">
+            Short description <span className="text-slate-500 font-normal">(optional)</span>
           </label>
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Turns raw call notes into a structured debrief"
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
         {/* Instructions / system prompt */}
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">What should this agent do?</label>
-          <p className="text-xs text-stone-500">
+          <label className="text-sm font-medium text-slate-700">What should this agent do?</label>
+          <p className="text-xs text-slate-500">
             Write plain-English instructions. Be specific about the output format you want.
           </p>
           <textarea
@@ -119,8 +119,8 @@ export function AgentBuilderForm() {
 3. Proposed business case in 2–3 sentences
 4. Recommended next steps with a suggested timeline
 
-Be concise and actionable. Use the account knowledge base context to fill in any gaps.`}
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2.5 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-y"
+Be concise and actionable. Use the opportunity documents context to fill in any gaps.`}
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
           />
         </div>
       </div>
@@ -129,62 +129,62 @@ Be concise and actionable. Use the account knowledge base context to fill in any
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-sm font-medium text-stone-300">Input fields</h2>
-            <p className="text-xs text-stone-600 mt-0.5">
+            <h2 className="text-sm font-medium text-slate-700">Input fields</h2>
+            <p className="text-xs text-slate-500 mt-0.5">
               What should the rep provide when running this agent?
             </p>
           </div>
           <button
             type="button"
             onClick={addInput}
-            className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 rounded-lg px-3 py-1.5 transition-colors"
+            className="inline-flex items-center gap-1 text-xs text-indigo-700 hover:text-indigo-800 border border-indigo-500/20 bg-white hover:bg-indigo-50 rounded-lg px-3 py-1.5 transition-colors"
           >
             + Add field
           </button>
         </div>
 
         {inputs.length === 0 && (
-          <p className="text-xs text-stone-700 italic">
-            No input fields — agent will run using knowledge base context only.
+          <p className="text-xs text-slate-600 italic">
+            No input fields — agent will run using opportunity documents context only.
           </p>
         )}
 
         {inputs.map((inp, i) => (
           <div
             key={inp.id}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3"
+            className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3"
           >
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-stone-500 uppercase tracking-wider">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                 Field {i + 1}
               </span>
               <button
                 type="button"
                 onClick={() => removeInput(inp.id)}
-                className="text-xs text-stone-600 hover:text-red-400 transition-colors"
+                className="text-xs text-slate-600 hover:text-red-600 transition-colors"
               >
                 Remove
               </button>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs text-stone-400">Label</label>
+                <label className="text-xs text-slate-600">Label</label>
                 <input
                   type="text"
                   value={inp.label}
                   onChange={(e) => updateInput(inp.id, { label: e.target.value })}
                   placeholder="Call notes"
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs text-stone-400">Type</label>
+                <label className="text-xs text-slate-600">Type</label>
                 <select
                   value={inp.type}
                   onChange={(e) =>
                     updateInput(inp.id, { type: e.target.value as ToolInput['type'] })
                   }
-                  className="w-full rounded-lg border border-white/[0.08] bg-[#0c0c0e] px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="textarea">Long text</option>
                   <option value="text">Short text</option>
@@ -192,13 +192,13 @@ Be concise and actionable. Use the account knowledge base context to fill in any
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-xs text-stone-400">Placeholder</label>
+              <label className="text-xs text-slate-600">Placeholder</label>
               <input
                 type="text"
                 value={inp.placeholder}
                 onChange={(e) => updateInput(inp.id, { placeholder: e.target.value })}
                 placeholder="Hint shown inside the field…"
-                className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -208,7 +208,7 @@ Be concise and actionable. Use the account knowledge base context to fill in any
                 onChange={(e) => updateInput(inp.id, { required: e.target.checked })}
                 className="rounded accent-indigo-500"
               />
-              <span className="text-xs text-stone-400">Required</span>
+              <span className="text-xs text-slate-600">Required</span>
             </label>
           </div>
         ))}
@@ -220,13 +220,13 @@ Be concise and actionable. Use the account knowledge base context to fill in any
         <button
           type="submit"
           disabled={!name.trim() || !instructions.trim() || loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
         >
           {loading ? 'Saving…' : 'Save agent'}
         </button>
         <a
           href="/dashboard/agents"
-          className="inline-flex items-center rounded-lg border border-white/[0.08] text-stone-400 hover:text-white px-4 py-2 text-sm transition-colors"
+          className="inline-flex items-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 px-4 py-2 text-sm transition-colors"
         >
           Cancel
         </a>

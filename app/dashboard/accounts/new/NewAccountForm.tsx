@@ -43,7 +43,7 @@ export function NewAccountForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="space-y-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-5">
+      <div className="space-y-4 rounded-xl border border-slate-200 bg-white shadow-sm p-5">
         <Field
           label="Company name"
           required
@@ -64,32 +64,32 @@ export function NewAccountForm() {
           placeholder="200–500 employees"
         />
         <div className="space-y-1.5">
-          <label className="text-sm font-medium text-stone-300">
-            Notes <span className="text-stone-600 font-normal">(optional)</span>
+          <label className="text-sm font-medium text-slate-700">
+            Notes <span className="text-slate-500 font-normal">(optional)</span>
           </label>
           <textarea
             value={form.notes}
             onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
             rows={3}
             placeholder="Key pain points, decision timeline, champion name…"
-            className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 resize-none"
+            className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none"
           />
         </div>
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-600">{error}</p>}
 
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={!form.company_name.trim() || loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-4 py-2 text-sm transition-colors"
         >
-          {loading ? 'Creating…' : 'Create account'}
+          {loading ? 'Creating…' : 'Create opportunity'}
         </button>
         <a
           href="/dashboard/accounts"
-          className="inline-flex items-center rounded-lg border border-white/[0.08] text-stone-400 hover:text-white px-4 py-2 text-sm transition-colors"
+          className="inline-flex items-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 px-4 py-2 text-sm transition-colors"
         >
           Cancel
         </a>
@@ -113,9 +113,9 @@ function Field({
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-sm font-medium text-stone-300">
+      <label className="text-sm font-medium text-slate-700">
         {label}{' '}
-        {!required && <span className="text-stone-600 font-normal">(optional)</span>}
+        {!required && <span className="text-slate-500 font-normal">(optional)</span>}
       </label>
       <input
         type="text"
@@ -123,7 +123,7 @@ function Field({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-stone-600 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+        className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
       />
     </div>
   );

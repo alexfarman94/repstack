@@ -35,16 +35,16 @@ export default async function AgentDetailPage({ params }: { params: { id: string
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 text-xs text-stone-500 mb-2">
-            <Link href="/dashboard/agents" className="hover:text-stone-300 transition-colors">
+          <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
+            <Link href="/dashboard/agents" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">
               Agents
             </Link>
             <span>/</span>
-            <span className="text-stone-400">{agent.name}</span>
+            <span className="text-slate-400">{agent.name}</span>
           </div>
-          <h1 className="text-2xl font-bold text-white">{agent.name}</h1>
+          <h1 className="text-2xl font-bold text-slate-900">{agent.name}</h1>
           {agent.description && (
-            <p className="text-stone-400 mt-1 text-sm">{agent.description}</p>
+            <p className="text-slate-500 mt-1 text-sm">{agent.description}</p>
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
