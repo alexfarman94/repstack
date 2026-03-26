@@ -31,6 +31,12 @@ export default async function DashboardPage() {
 
   const hasAccounts = (accounts?.length ?? 0) > 0;
   const hasAgents = (agents?.length ?? 0) > 0;
+  const hasDocs = (docCount ?? 0) > 0;
+
+  // Derive step states
+  const step1Status: StepStatus = hasAccounts ? 'completed' : 'active';
+  const step2Status: StepStatus = hasDocs ? 'completed' : hasAccounts ? 'active' : 'locked';
+  const step3Status: StepStatus = hasAccounts ? 'active' : 'locked';
 
   return (
     <div className="space-y-10">
@@ -40,7 +46,101 @@ export default async function DashboardPage() {
         <p className="text-slate-500 mt-1 text-sm">Your opportunities, documents, and AI agents in one place.</p>
       </div>
 
-      {hasAccounts ? (
+      {/* Persistent workflow card — always visible */}
+      <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8">
+        <div className="space-y-1.5 mb-6">
+          <h2 className="text-lg font-semibold text-slate-900">Your Rep Stack workflow</h2>
+          <p className="text-sm text-slate-500">
+            Add an opportunity, upload your documents, then run AI tools with real context.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <OnboardingStep
+            stepNumber="1"
+            status={step1Status}
+            title="Add an opportunity"
+            description="A company you're actively working on"
+            action={
+              step1Status === 'completed' ? (
+                <Link
+                  href="/dashboard/accounts"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium px-4 py-2 text-sm transition-colors"
+                >
+                  View opportunities →
+                </Link>
+              ) : (
+                <Link
+                  href="/dashboard/accounts/new"
+                  className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 text-sm transition-colors"
+                >
+                  Add opportunity →
+                </Link>
+              )
+            }
+          />
+
+          <OnboardingStep
+            stepNumber="2"
+            status={step2Status}
+            title="Upload your documents"
+            description="Call transcripts, meeting notes, product briefs"
+            action={
+              step2Status === 'completed' ? (
+                <Link
+                  href={`/dashboard/knowledge-base/upload${accounts?.[0]?.id ? `?accountId=${accounts[0].id}` : ''}`}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium px-4 py-2 text-sm transition-colors"
+                >
+                  Upload more →
+                </Link>
+              ) : step2Status === 'active' ? (
+                <Link
+                  href={`/dashboard/knowledge-base/upload${accounts?.[0]?.id ? `?accountId=${accounts[0].id}` : ''}`}
+                  className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 text-sm transition-colors"
+                >
+                  Upload documents →
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex items-center gap-2 rounded-lg bg-slate-50 text-slate-300 border border-slate-200 font-medium px-4 py-2 text-sm cursor-not-allowed"
+                >
+                  Upload documents
+                </button>
+              )
+            }
+          />
+
+          <OnboardingStep
+            stepNumber="3"
+            status={step3Status}
+            title="Run a tool"
+            description="AI tools with your real context auto-loaded"
+            action={
+              step3Status === 'active' ? (
+                <Link
+                  href="/tools"
+                  className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 text-sm transition-colors"
+                >
+                  Browse tools →
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex items-center gap-2 rounded-lg bg-slate-50 text-slate-300 border border-slate-200 font-medium px-4 py-2 text-sm cursor-not-allowed"
+                >
+                  Browse tools
+                </button>
+              )
+            }
+          />
+        </div>
+      </div>
+
+      {/* Returning-user sections — shown once they have accounts */}
+      {hasAccounts && (
         <>
           {/* Stats row */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -135,60 +235,77 @@ export default async function DashboardPage() {
             </section>
           )}
         </>
-      ) : (
-        <div className="rounded-xl border border-slate-200 bg-white shadow-sm p-6 sm:p-8">
-          <div className="space-y-1.5">
-            <h2 className="text-lg font-semibold text-slate-900">Welcome to Rep Stack</h2>
-            <p className="text-sm text-slate-500">Let's get you set up in 3 steps</p>
-          </div>
-
-          <div className="mt-6 space-y-4">
-            <OnboardingStep
-              stepNumber="1"
-              title="Add your first opportunity"
-              description="A company you're actively working on"
-              action={
-                <Link
-                  href="/dashboard/accounts/new"
-                  className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 text-sm transition-colors"
-                >
-                  Add opportunity →
-                </Link>
-              }
-            />
-
-            <OnboardingStep
-              stepNumber="2"
-              title="Upload your documents"
-              description="Call transcripts, meeting notes, product briefs"
-              action={
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex items-center gap-2 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 font-medium px-4 py-2 text-sm cursor-not-allowed"
-                >
-                  Upload documents
-                </button>
-              }
-            />
-
-            <OnboardingStep
-              stepNumber="3"
-              title="Run your first tool"
-              description="AI tools with your real context auto-loaded"
-              action={
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex items-center gap-2 rounded-lg bg-slate-50 text-slate-400 border border-slate-200 font-medium px-4 py-2 text-sm cursor-not-allowed"
-                >
-                  Run first tool
-                </button>
-              }
-            />
-          </div>
-        </div>
       )}
+    </div>
+  );
+}
+
+// ─── Sub-components ────────────────────────────────────────────────────────────
+
+type StepStatus = 'completed' | 'active' | 'locked';
+
+function OnboardingStep({
+  stepNumber,
+  title,
+  description,
+  action,
+  status,
+}: {
+  stepNumber: string;
+  title: string;
+  description: string;
+  action: ReactNode;
+  status: StepStatus;
+}) {
+  const isCompleted = status === 'completed';
+  const isLocked = status === 'locked';
+
+  return (
+    <div
+      className={`flex items-start justify-between gap-4 rounded-xl border px-4 py-4 ${
+        isCompleted
+          ? 'border-emerald-200 bg-emerald-50/40'
+          : isLocked
+          ? 'border-slate-200 bg-slate-50/50'
+          : 'border-indigo-200 bg-indigo-50/30'
+      }`}
+    >
+      <div className="flex items-start gap-3 min-w-0">
+        {/* Step indicator circle */}
+        <div
+          className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold mt-0.5 ${
+            isCompleted
+              ? 'bg-emerald-500 text-white'
+              : isLocked
+              ? 'bg-slate-200 text-slate-400'
+              : 'bg-indigo-600 text-white'
+          }`}
+        >
+          {isCompleted ? '✓' : stepNumber}
+        </div>
+
+        <div className="min-w-0">
+          <p
+            className={`text-xs font-semibold uppercase tracking-widest ${
+              isCompleted ? 'text-emerald-600' : isLocked ? 'text-slate-400' : 'text-indigo-600'
+            }`}
+          >
+            {isCompleted ? 'Completed' : `Step ${stepNumber}`}
+          </p>
+          <p
+            className={`text-sm mt-1 ${
+              isCompleted ? 'text-slate-600' : isLocked ? 'text-slate-400' : 'font-semibold text-slate-900'
+            }`}
+          >
+            {title}
+          </p>
+          <p className={`text-xs mt-0.5 ${isLocked ? 'text-slate-300' : 'text-slate-500'}`}>
+            {description}
+          </p>
+        </div>
+      </div>
+
+      <div className="shrink-0">{action}</div>
     </div>
   );
 }
@@ -229,30 +346,5 @@ function QuickAction({
         <p className="text-xs text-slate-500 mt-0.5">{description}</p>
       </div>
     </Link>
-  );
-}
-
-function OnboardingStep({
-  stepNumber,
-  title,
-  description,
-  action,
-}: {
-  stepNumber: string;
-  title: string;
-  description: string;
-  action: ReactNode;
-}) {
-  return (
-    <div className="flex items-start justify-between gap-4 rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-4">
-      <div className="min-w-0">
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
-          Step {stepNumber}
-        </p>
-        <p className="text-sm font-semibold text-slate-900 mt-1">{title}</p>
-        <p className="text-xs text-slate-500 mt-0.5">{description}</p>
-      </div>
-      <div className="shrink-0">{action}</div>
-    </div>
   );
 }
