@@ -102,8 +102,8 @@ export function MobileTabClient({ href, label }: { href: string; label: string }
       href={href}
       className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
         isActive
-          ? 'bg-white/[0.1] text-white'
-          : 'text-slate-400 hover:text-white'
+          ? 'bg-indigo-50 text-indigo-700'
+          : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
       }`}
     >
       {label}

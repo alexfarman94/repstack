@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { auth } from '@clerk/nextjs/server';
 import { createServerClient } from '@/lib/supabase';
+import { AgentCards } from './AgentCards';
+import type { ToolInput } from '@/lib/types';
 
 export default async function AgentsPage() {
   const { userId } = await auth();
@@ -9,9 +11,18 @@ export default async function AgentsPage() {
   const supabase = createServerClient();
   const { data: agents } = await supabase
     .from('agents')
-    .select('id, name, description, created_at')
+    .select('id, name, description, inputs, created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
+
+  // Normalize inputs from JSON to ToolInput[]
+  const agentCards = (agents ?? []).map((a) => ({
+    id: a.id,
+    name: a.name,
+    description: a.description,
+    inputs: (a.inputs as ToolInput[]) ?? [],
+    created_at: a.created_at,
+  }));
 
   return (
     <div className="space-y-6">
@@ -19,7 +30,7 @@ export default async function AgentsPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Agents</h1>
           <p className="text-slate-500 mt-1 text-sm">
-            Custom AI tools you&apos;ve built. Each one can run against any opportunity in your pipeline.
+            Custom AI tools you&apos;ve built. Run any agent against an opportunity in your pipeline.
           </p>
         </div>
         <Link
@@ -30,12 +41,12 @@ export default async function AgentsPage() {
         </Link>
       </div>
 
-      {!agents?.length ? (
+      {!agentCards.length ? (
         <div className="rounded-xl border border-dashed border-slate-200 bg-white p-10 text-center">
           <p className="text-slate-900 font-medium">No agents yet</p>
           <p className="text-slate-500 text-sm mt-2 max-w-sm mx-auto">
             Build a custom agent with plain-English instructions and optional input fields.
-            Run it against any opportunity in your pipeline — no manual pasting required.
+            Run it against any opportunity — no manual pasting required.
           </p>
           <Link
             href="/dashboard/agents/new"
@@ -45,28 +56,7 @@ export default async function AgentsPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid sm:grid-cols-2 gap-4">
-          {agents.map((agent) => (
-            <Link
-              key={agent.id}
-              href={`/dashboard/agents/${agent.id}`}
-              className="rounded-xl border border-slate-200 bg-white px-5 py-4 hover:bg-slate-50 transition-colors shadow-sm flex flex-col"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <p className="font-medium text-slate-900">{agent.name}</p>
-                <span className="text-xs text-slate-500 shrink-0">
-                  {new Date(agent.created_at).toLocaleDateString()}
-                </span>
-              </div>
-              {agent.description && (
-                <p className="text-sm text-slate-600 mt-1.5 line-clamp-2">{agent.description}</p>
-              )}
-              <div className="mt-3 flex items-center gap-2">
-                <span className="text-xs text-indigo-600">Run agent →</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <AgentCards agents={agentCards} />
       )}
     </div>
   );
