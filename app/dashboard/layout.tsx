@@ -9,34 +9,34 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   return (
     <div className="flex min-h-[calc(100vh-56px)]">
-      {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-56 border-r border-white/[0.06] bg-[#0e0e10] shrink-0">
-        <div className="px-4 py-6 space-y-1">
-          <SidebarLinkClient href="/dashboard" exact label="Overview" icon="overview" />
-          <div className="pt-4 pb-1">
-            <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-600">
-              Knowledge Base
+      {/* Sidebar — dark for professional CRM contrast */}
+      <aside className="hidden md:flex flex-col w-56 bg-slate-800 shrink-0">
+        <div className="px-3 py-5 space-y-0.5">
+          <SidebarLinkClient href="/dashboard" exact label="Dashboard" icon="overview" />
+
+          <div className="pt-5 pb-1.5 px-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+              Pipeline
             </p>
           </div>
-          <SidebarLinkClient href="/dashboard/accounts" label="Accounts" icon="accounts" />
-          <SidebarLinkClient href="/dashboard/knowledge-base" label="Documents" icon="docs" />
-          <div className="pt-4 pb-1">
-            <p className="px-3 text-[10px] font-semibold uppercase tracking-widest text-stone-600">
-              Tools
+          <SidebarLinkClient href="/dashboard/accounts" label="Opportunities" icon="accounts" />
+
+          <div className="pt-5 pb-1.5 px-3">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-500">
+              AI
             </p>
           </div>
-          <SidebarLinkClient href="/tools" label="All tools" icon="tools" />
-          <SidebarLinkClient href="/dashboard/agents" label="My agents" icon="agents" />
+          <SidebarLinkClient href="/tools" label="Tools" icon="tools" />
+          <SidebarLinkClient href="/dashboard/agents" label="Agents" icon="agents" />
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 bg-slate-50">
         {/* Mobile tab bar */}
-        <nav className="md:hidden flex gap-1 px-4 py-3 border-b border-white/[0.06] overflow-x-auto">
-          <MobileTabClient href="/dashboard" label="Overview" />
-          <MobileTabClient href="/dashboard/accounts" label="Accounts" />
-          <MobileTabClient href="/dashboard/knowledge-base" label="Docs" />
+        <nav className="md:hidden flex gap-1 px-4 py-2 border-b border-slate-200 bg-white overflow-x-auto">
+          <MobileTabClient href="/dashboard" label="Dashboard" />
+          <MobileTabClient href="/dashboard/accounts" label="Opportunities" />
           <MobileTabClient href="/tools" label="Tools" />
           <MobileTabClient href="/dashboard/agents" label="Agents" />
         </nav>
