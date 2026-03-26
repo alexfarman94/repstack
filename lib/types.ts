@@ -31,6 +31,41 @@ export interface ToolInput {
   options?: string[];
 }
 
+// ─── Database types ───────────────────────────────────────────────────────────
+
+export interface Account {
+  id: string;
+  user_id: string;
+  company_name: string;
+  industry: string | null;
+  size: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export interface Document {
+  id: string;
+  user_id: string;
+  account_id: string | null;
+  title: string;
+  content: string;
+  doc_type: 'transcript' | 'product_info' | 'meeting_notes' | 'other';
+  char_count: number | null;
+  created_at: string;
+}
+
+export interface CustomAgent {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string | null;
+  system_prompt: string;
+  inputs: ToolInput[];
+  created_at: string;
+}
+
+// ─── Tool types ───────────────────────────────────────────────────────────────
+
 export interface Tool {
   id: string;
   slug: string;

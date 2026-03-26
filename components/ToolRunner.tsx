@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { ToolInput } from '@/lib/types';
 import { CopyButton } from './CopyButton';
 
@@ -9,12 +10,28 @@ interface ToolRunnerProps {
   inputs: ToolInput[];
 }
 
+type Account = { id: string; company_name: string };
+
 export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
+  const { isSignedIn } = useUser();
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountId, setAccountId] = useState('');
   const [values, setValues] = useState<Record<string, string>>({});
   const [output, setOutput] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'streaming' | 'done' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
   const outputRef = useRef<HTMLDivElement>(null);
+
+  // Fetch accounts once the user is signed in
+  useEffect(() => {
+    if (!isSignedIn) return;
+    fetch('/api/accounts')
+      .then((r) => r.json())
+      .then((data: Account[]) => {
+        if (Array.isArray(data)) setAccounts(data);
+      })
+      .catch(() => {});
+  }, [isSignedIn]);
 
   const isValid = inputs
     .filter((i) => i.required)
@@ -31,7 +48,7 @@ export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
       const res = await fetch('/api/tools/run', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ toolId, inputs: values }),
+        body: JSON.stringify({ toolId, inputs: values, accountId: accountId || undefined }),
       });
 
       if (!res.ok) {
@@ -62,14 +79,12 @@ export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
 
           try {
             const parsed = JSON.parse(data);
-            // Anthropic SSE: content_block_delta events carry text
             if (
               parsed.type === 'content_block_delta' &&
               parsed.delta?.type === 'text_delta' &&
               parsed.delta?.text
             ) {
               setOutput((prev) => prev + parsed.delta.text);
-              // Scroll output into view
               if (outputRef.current) {
                 outputRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
               }
@@ -96,6 +111,37 @@ export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
 
   return (
     <div className="rounded-2xl border border-white/[0.1] overflow-hidden">
+      {/* Account selector — shown to signed-in users with accounts */}
+      {isSignedIn && accounts.length > 0 && (
+        <div className="px-6 pt-5 pb-0">
+          <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.06] px-4 py-3 flex items-start gap-3">
+            <span className="text-lg mt-0.5">⚡</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-indigo-300 mb-1.5">
+                Auto-inject knowledge base context
+              </p>
+              <select
+                value={accountId}
+                onChange={(e) => setAccountId(e.target.value)}
+                className="w-full rounded-lg border border-white/[0.08] bg-[#0c0c0e] px-3 py-1.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="">— No account (fill fields manually) —</option>
+                {accounts.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.company_name}
+                  </option>
+                ))}
+              </select>
+              {accountId && (
+                <p className="text-[11px] text-indigo-400/70 mt-1.5">
+                  All documents for this account will be injected into the tool automatically.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Input form */}
       <div className="p-6 space-y-5 bg-white/[0.02]">
         {inputs.map((input) => (
@@ -104,6 +150,11 @@ export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
               {input.label}
               {!input.required && (
                 <span className="ml-2 text-xs text-stone-600 font-normal">optional</span>
+              )}
+              {input.required && accountId && (
+                <span className="ml-2 text-xs text-indigo-400/70 font-normal">
+                  (can leave blank — KB context loaded)
+                </span>
               )}
             </label>
             {input.type === 'textarea' ? (
@@ -142,7 +193,10 @@ export function ToolRunner({ toolId, inputs }: ToolRunnerProps) {
         <div className="flex items-center gap-3 pt-1">
           <button
             onClick={handleSubmit}
-            disabled={!isValid || status === 'loading' || status === 'streaming'}
+            disabled={
+              // With KB context, required fields become optional
+              (!isValid && !accountId) || status === 'loading' || status === 'streaming'
+            }
             className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-medium px-5 py-2.5 text-sm transition-all duration-150"
           >
             {status === 'loading' ? (
