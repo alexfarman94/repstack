@@ -26,8 +26,17 @@ export async function POST(req: NextRequest) {
   }
 
   const tool = tools.find((t) => t.id === toolId);
-  if (!tool?.systemPrompt || !tool.inputs) {
-    return NextResponse.json({ error: 'Tool not found or not a live tool' }, { status: 404 });
+  if (!tool) {
+    console.error(`[tools/run] Tool not found. toolId="${toolId}" available=[${tools.map(t => t.id).join(',')}]`);
+    return NextResponse.json({ error: `Tool not found: ${toolId}` }, { status: 404 });
+  }
+  if (!tool.systemPrompt) {
+    console.error(`[tools/run] Tool "${toolId}" has no systemPrompt`);
+    return NextResponse.json({ error: 'Tool has no system prompt' }, { status: 404 });
+  }
+  if (!tool.inputs) {
+    console.error(`[tools/run] Tool "${toolId}" has no inputs`);
+    return NextResponse.json({ error: 'Tool has no inputs defined' }, { status: 404 });
   }
 
   // Validate required inputs
@@ -70,6 +79,8 @@ export async function POST(req: NextRequest) {
     .map((inputDef) => `**${inputDef.label}:**\n${inputs![inputDef.id].trim()}`)
     .join('\n\n');
 
+  console.log(`[tools/run] Calling Anthropic for tool="${toolId}" model="claude-3-5-sonnet-20241022"`);
+
   try {
     const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -88,8 +99,10 @@ export async function POST(req: NextRequest) {
     });
 
     if (!anthropicRes.ok) {
+      const errBody = await anthropicRes.text();
+      console.error(`[tools/run] Anthropic error ${anthropicRes.status}: ${errBody}`);
       return NextResponse.json(
-        { error: `Anthropic API error: ${anthropicRes.status}` },
+        { error: `Anthropic API error: ${anthropicRes.status} — ${errBody.slice(0, 200)}` },
         { status: anthropicRes.status }
       );
     }
