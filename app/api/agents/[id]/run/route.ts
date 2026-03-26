@@ -84,7 +84,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20241022',
+        model: 'claude-3-7-sonnet-20250219',
         max_tokens: MAX_TOKENS,
         stream: true,
         system: systemPrompt,
