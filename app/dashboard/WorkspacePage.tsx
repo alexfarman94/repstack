@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { AccountRail } from '@/components/workspace/AccountRail';
+import { useEffect, useState } from 'react';
 import { IntakePanel } from '@/components/workspace/IntakePanel';
 import { RepositoryDropzone } from '@/components/workspace/RepositoryDropzone';
 import { AgentSelector } from '@/components/workspace/AgentSelector';
@@ -24,80 +23,67 @@ type AgentRecord = {
 };
 
 export function WorkspacePage() {
-  const { accountId, setAccountId, latestOutput, latestStatus, latestRunnerTitle } = useRunner();
+  const {
+    activeAccountId,
+    activeOpportunityId,
+    latestOutput,
+    latestStatus,
+    latestRunnerTitle,
+    refreshKey,
+  } = useRunner();
+
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [agents, setAgents] = useState<AgentRecord[]>([]);
-  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const [accountsRes, agentsRes] = await Promise.all([fetch('/api/accounts'), fetch('/api/agents')]);
-      const accountsData = await accountsRes.json();
-      const agentsData = await agentsRes.json();
-      const nextAccounts = Array.isArray(accountsData) ? accountsData : [];
-      const nextAgents = Array.isArray(agentsData) ? agentsData : [];
-      setAccounts(nextAccounts);
-      setAgents(nextAgents);
-      if (!accountId && nextAccounts[0]?.id) {
-        setAccountId(nextAccounts[0].id);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, []);
+    setLoading(true);
+    Promise.all([fetch('/api/accounts'), fetch('/api/agents')])
+      .then(async ([acctRes, agentsRes]) => {
+        const acctData = await acctRes.json();
+        const agentsData = await agentsRes.json();
+        setAccounts(Array.isArray(acctData) ? acctData : []);
+        setAgents(Array.isArray(agentsData) ? agentsData : []);
+      })
+      .finally(() => setLoading(false));
+  }, [refreshKey]);
 
-  const filteredAccounts = useMemo(
-    () =>
-      accounts.filter((account) =>
-        account.company_name.toLowerCase().includes(query.toLowerCase().trim())
-      ),
-    [accounts, query]
-  );
+  const activeAccount = accounts.find((a) => a.id === activeAccountId);
 
-  const activeAccount = accounts.find((item) => item.id === accountId);
+  if (loading) {
+    return <div className="glass-panel p-6 text-sm text-slate-500">Loading workspace...</div>;
+  }
 
   return (
     <div className="space-y-4">
-      <header className="glass-panel flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-5">
+      {/* Context header */}
+      <div className="glass-panel flex items-center justify-between px-4 py-3">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Rep Workspace</h1>
-          <p className="text-sm text-slate-500">Single-page command center for pipeline, context, and AI actions.</p>
+          <h1 className="text-lg font-semibold text-slate-900">
+            {activeAccount?.company_name || 'Rep Workspace'}
+          </h1>
+          <p className="text-xs text-slate-500">
+            {activeAccount
+              ? `${activeAccount.industry || 'General'}${activeOpportunityId ? ' — Opportunity selected' : ''}`
+              : 'Select an account from the sidebar to get started'}
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">Live</span>
-          <span className="rounded-full bg-white/80 px-2.5 py-1 text-xs font-medium text-slate-600">
-            {activeAccount?.company_name || 'No active account'}
+        {activeAccount && (
+          <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-700">
+            Active
           </span>
-        </div>
-      </header>
+        )}
+      </div>
 
-      {loading ? (
-        <div className="glass-panel p-6 text-sm text-slate-600">Loading workspace...</div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[280px,minmax(0,1fr),360px]">
-          <div className="xl:sticky xl:top-20 xl:h-[calc(100vh-96px)]">
-            <AccountRail
-              accounts={filteredAccounts}
-              activeAccountId={accountId}
-              query={query}
-              onQueryChange={setQuery}
-              onSelectAccount={setAccountId}
-            />
-          </div>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr),360px]">
+        <main className="space-y-4">
+          <IntakePanel onCreated={() => {}} />
+          <RepositoryDropzone accountId={activeAccountId} />
+          <AgentSelector accountId={activeAccountId} agents={agents} />
+        </main>
 
-          <main className="space-y-4">
-            <IntakePanel onCreated={fetchData} />
-            <RepositoryDropzone accountId={accountId} />
-            <AgentSelector accountId={accountId} agents={agents} />
-          </main>
-
-          <div className="xl:sticky xl:top-20 xl:h-[calc(100vh-96px)]">
+        <div className="hidden xl:block">
+          <div className="sticky top-6">
             <InsightsPanel
               accountName={activeAccount?.company_name}
               runnerTitle={latestRunnerTitle}
@@ -106,7 +92,7 @@ export function WorkspacePage() {
             />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
