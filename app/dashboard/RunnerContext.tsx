@@ -38,6 +38,11 @@ interface RunnerContextValue {
   activeTab: DashboardTab;
   setActiveTab: (tab: DashboardTab) => void;
 
+  // Agent selection (Phase 4)
+  selectedAgentId: string;
+  isUserAgent: boolean;
+  setSelectedAgent: (id: string, isUser: boolean) => void;
+
   // Runner state (legacy compat + new)
   runner: RunnerConfig | null;
   accountId: string;
@@ -66,6 +71,9 @@ const RunnerContext = createContext<RunnerContextValue>({
   setContext: () => {},
   activeTab: 'workspace',
   setActiveTab: () => {},
+  selectedAgentId: '',
+  isUserAgent: false,
+  setSelectedAgent: () => {},
   runner: null,
   accountId: '',
   latestOutput: '',
@@ -88,6 +96,10 @@ export function RunnerProvider({ children }: { children: ReactNode }) {
   const [activeAccountId, setActiveAccountId] = useState('');
   const [activeOpportunityId, setActiveOpportunityId] = useState('');
   const [activeTab, setActiveTab] = useState<DashboardTab>('workspace');
+
+  // Agent selection
+  const [selectedAgentId, setSelectedAgentId] = useState('');
+  const [isUserAgent, setIsUserAgent] = useState(false);
 
   // Runner state
   const [runner, setRunner] = useState<RunnerConfig | null>(null);
@@ -118,6 +130,11 @@ export function RunnerProvider({ children }: { children: ReactNode }) {
 
   const close = useCallback(() => setRunner(null), []);
 
+  const setSelectedAgent = useCallback((id: string, isUser: boolean) => {
+    setSelectedAgentId(id);
+    setIsUserAgent(isUser);
+  }, []);
+
   const triggerRefresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   return (
@@ -130,6 +147,9 @@ export function RunnerProvider({ children }: { children: ReactNode }) {
         setContext,
         activeTab,
         setActiveTab,
+        selectedAgentId,
+        isUserAgent,
+        setSelectedAgent,
         runner,
         accountId,
         latestOutput,
