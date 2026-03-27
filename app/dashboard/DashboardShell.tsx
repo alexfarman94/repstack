@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { RunnerProvider } from './RunnerContext';
 import { SidebarNav } from '@/components/sidebar/SidebarNav';
-import { RunnerPanel } from '@/components/RunnerPanel';
+import { OutputPanel } from '@/components/output/OutputPanel';
 
 function ShellContent({ children }: { children: ReactNode }) {
   return (
@@ -20,8 +20,10 @@ function ShellContent({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      {/* Right panel — runner slide-in (existing) */}
-      <RunnerPanel />
+      {/* Right panel — persistent output */}
+      <div className="hidden w-[380px] shrink-0 xl:block">
+        <OutputPanel />
+      </div>
     </div>
   );
 }
