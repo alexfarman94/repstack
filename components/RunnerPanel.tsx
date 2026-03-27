@@ -8,7 +8,7 @@ type Account = { id: string; company_name: string };
 type Status = 'idle' | 'loading' | 'streaming' | 'done' | 'error';
 
 export function RunnerPanel() {
-  const { runner, accountId, setAccountId, close } = useRunner();
+  const { runner, accountId, setAccountId, close, setLatestOutput, setLatestStatus, setLatestRunnerTitle } = useRunner();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [values, setValues] = useState<Record<string, string>>({});
   const [output, setOutput] = useState('');
@@ -38,6 +38,9 @@ export function RunnerPanel() {
     setOutput('');
     setStatus('idle');
     setErrorMsg('');
+    setLatestOutput('');
+    setLatestStatus('idle');
+    if (title) setLatestRunnerTitle(title);
   }, [runnerId]);
 
   // ESC key closes the panel
@@ -68,7 +71,9 @@ export function RunnerPanel() {
   const handleGenerate = async () => {
     if (!runner) return;
     setStatus('loading');
+    setLatestStatus('loading');
     setOutput('');
+    setLatestOutput('');
     setErrorMsg('');
 
     const endpoint =
@@ -95,6 +100,7 @@ export function RunnerPanel() {
       if (!res.body) throw new Error('No response body');
 
       setStatus('streaming');
+      setLatestStatus('streaming');
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -118,6 +124,7 @@ export function RunnerPanel() {
               parsed.delta?.text
             ) {
               setOutput((prev) => prev + parsed.delta.text);
+              setLatestOutput((prev) => prev + parsed.delta.text);
             }
           } catch {
             // skip malformed SSE lines
@@ -126,12 +133,14 @@ export function RunnerPanel() {
       }
 
       setStatus('done');
+      setLatestStatus('done');
       setTimeout(() => {
         outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 50);
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Something went wrong');
       setStatus('error');
+      setLatestStatus('error');
     }
   };
 
@@ -298,6 +307,8 @@ export function RunnerPanel() {
                       onClick={() => {
                         setOutput('');
                         setStatus('idle');
+                        setLatestOutput('');
+                        setLatestStatus('idle');
                         setErrorMsg('');
                         setValues({});
                       }}

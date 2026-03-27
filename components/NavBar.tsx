@@ -16,12 +16,6 @@ export function NavBar() {
           Rep Stack
         </a>
         <div className="flex items-center gap-6">
-          <a href="/tools" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-            Tools
-          </a>
-          <a href="/about" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-            About
-          </a>
           {hasClerkKey ? (
             <>
               <SignedIn>
@@ -29,11 +23,17 @@ export function NavBar() {
                   href="/dashboard"
                   className={`text-sm transition-colors ${
                     inDashboard
-                      ? 'text-slate-900 font-medium'
+                      ? 'text-indigo-700 font-semibold'
                       : 'text-slate-500 hover:text-slate-900'
                   }`}
                 >
-                  Dashboard
+                  Workspace
+                </Link>
+                <Link href="/dashboard/accounts" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                  Accounts
+                </Link>
+                <Link href="/dashboard/agents" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
+                  Agents
                 </Link>
                 <UserButton
                   appearance={{
