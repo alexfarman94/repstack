@@ -9,7 +9,7 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
   const supabase = createServerClient();
   const { data, error } = await supabase
     .from('accounts')
-    .select('*, documents(*)')
+    .select('*, documents(*), opportunities(*, documents(count))')
     .eq('id', params.id)
     .eq('user_id', userId)
     .single();

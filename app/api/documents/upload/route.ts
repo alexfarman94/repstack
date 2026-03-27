@@ -16,6 +16,7 @@ export async function POST(req: NextRequest) {
     title?: string;
     doc_type?: string;
     account_id?: string;
+    opportunity_id?: string;
   };
 
   try {
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { fileName, fileBase64, mimeType, title, doc_type, account_id } = body;
+  const { fileName, fileBase64, mimeType, title, doc_type, account_id, opportunity_id } = body;
 
   if (!fileBase64) return NextResponse.json({ error: 'fileBase64 is required' }, { status: 400 });
   if (!mimeType) return NextResponse.json({ error: 'mimeType is required' }, { status: 400 });
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest) {
       content: text.trim(),
       doc_type: doc_type || 'other',
       account_id: account_id || null,
+      opportunity_id: opportunity_id || null,
       char_count: text.trim().length,
     })
     .select()

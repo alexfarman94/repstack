@@ -2,63 +2,52 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { createServerClient } from '@/lib/supabase';
 
-// GET: any authenticated user can read an active platform agent
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const supabase = createServerClient();
   const { data, error } = await supabase
-    .from('agents')
-    .select('id, name, description, inputs, is_active, created_at')
+    .from('user_agents')
+    .select('id, user_id, name, description, system_prompt, inputs, created_at')
     .eq('id', params.id)
-    .eq('is_active', true)
+    .eq('user_id', userId)
     .single();
 
   if (error || !data) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   return NextResponse.json(data);
 }
 
-// PATCH: admin-only
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden — admin only' }, { status: 403 });
-  }
-
   const body = await req.json();
-  const { name, description, system_prompt, inputs, is_active } = body;
+  const { name, description, system_prompt, inputs } = body;
 
   const supabase = createServerClient();
   const { data, error } = await supabase
-    .from('agents')
-    .update({ name, description, system_prompt, inputs, is_active })
+    .from('user_agents')
+    .update({ name, description, system_prompt, inputs })
     .eq('id', params.id)
-    .select('id, name, description, inputs, is_active, created_at')
+    .eq('user_id', userId)
+    .select('id, user_id, name, description, inputs, created_at')
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json(data);
 }
 
-// DELETE: admin-only
 export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
-  if (role !== 'admin') {
-    return NextResponse.json({ error: 'Forbidden — admin only' }, { status: 403 });
-  }
 
   const supabase = createServerClient();
   const { error } = await supabase
-    .from('agents')
+    .from('user_agents')
     .delete()
-    .eq('id', params.id);
+    .eq('id', params.id)
+    .eq('user_id', userId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return new NextResponse(null, { status: 204 });

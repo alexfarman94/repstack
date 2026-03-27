@@ -11,18 +11,13 @@ export async function GET(req: NextRequest) {
 
   const supabase = createServerClient();
   let query = supabase
-    .from('documents')
-    .select('*')
+    .from('opportunities')
+    .select('*, documents(count)')
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
   if (accountId) {
     query = query.eq('account_id', accountId);
-  }
-
-  const opportunityId = searchParams.get('opportunityId');
-  if (opportunityId) {
-    query = query.eq('opportunity_id', opportunityId);
   }
 
   const { data, error } = await query;
@@ -35,23 +30,38 @@ export async function POST(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
-  const { title, content, doc_type, account_id, opportunity_id } = body;
+  const { name, account_id, stage, value, close_date, notes } = body;
 
-  if (!title?.trim()) return NextResponse.json({ error: 'title is required' }, { status: 400 });
-  if (!content?.trim()) return NextResponse.json({ error: 'content is required' }, { status: 400 });
-  if (!doc_type) return NextResponse.json({ error: 'doc_type is required' }, { status: 400 });
+  if (!name?.trim()) {
+    return NextResponse.json({ error: 'name is required' }, { status: 400 });
+  }
+  if (!account_id) {
+    return NextResponse.json({ error: 'account_id is required' }, { status: 400 });
+  }
 
+  // Verify the account belongs to this user
   const supabase = createServerClient();
+  const { data: account, error: acctErr } = await supabase
+    .from('accounts')
+    .select('id')
+    .eq('id', account_id)
+    .eq('user_id', userId)
+    .single();
+
+  if (acctErr || !account) {
+    return NextResponse.json({ error: 'Account not found' }, { status: 404 });
+  }
+
   const { data, error } = await supabase
-    .from('documents')
+    .from('opportunities')
     .insert({
       user_id: userId,
-      title: title.trim(),
-      content: content.trim(),
-      doc_type,
-      account_id: account_id || null,
-      opportunity_id: opportunity_id || null,
-      char_count: content.trim().length,
+      account_id,
+      name: name.trim(),
+      stage: stage || null,
+      value: value || null,
+      close_date: close_date || null,
+      notes: notes || null,
     })
     .select()
     .single();
