@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 interface QuickAddModalProps {
   type: 'account' | 'opportunity';
@@ -16,19 +16,40 @@ export function QuickAddModal({ type, accountId, onClose, onCreated }: QuickAddM
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  // Close on ESC
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+  // Close on ESC + focus trap
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+      return;
+    }
+    // Focus trap
+    if (e.key === 'Tab' && modalRef.current) {
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+        'input, select, textarea, button, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   }, [onClose]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,8 +94,15 @@ export function QuickAddModal({ type, accountId, onClose, onCreated }: QuickAddM
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={type === 'account' ? 'New Account' : 'New Opportunity'}
+    >
       <div
+        ref={modalRef}
         className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-5 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
@@ -83,40 +111,58 @@ export function QuickAddModal({ type, accountId, onClose, onCreated }: QuickAddM
         </h3>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-3">
-          <input
-            ref={inputRef}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={type === 'account' ? 'Company name' : 'Opportunity name'}
-            className="glass-input w-full"
-          />
-
-          {type === 'account' && (
+          <div>
+            <label htmlFor="qa-name" className="mb-1 block text-[11px] font-medium text-slate-500">
+              {type === 'account' ? 'Company name' : 'Opportunity name'}
+            </label>
             <input
-              value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-              placeholder="Industry (optional)"
+              id="qa-name"
+              ref={inputRef}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={type === 'account' ? 'e.g. Acme Corp' : 'e.g. Q2 Enterprise Deal'}
               className="glass-input w-full"
             />
+          </div>
+
+          {type === 'account' && (
+            <div>
+              <label htmlFor="qa-industry" className="mb-1 block text-[11px] font-medium text-slate-500">
+                Industry <span className="text-slate-400">(optional)</span>
+              </label>
+              <input
+                id="qa-industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                placeholder="e.g. SaaS, Healthcare"
+                className="glass-input w-full"
+              />
+            </div>
           )}
 
           {type === 'opportunity' && (
-            <select
-              value={stage}
-              onChange={(e) => setStage(e.target.value)}
-              className="glass-input w-full"
-            >
-              <option value="">Stage (optional)</option>
-              <option value="Discovery">Discovery</option>
-              <option value="Qualification">Qualification</option>
-              <option value="Proposal">Proposal</option>
-              <option value="Negotiation">Negotiation</option>
-              <option value="Closed Won">Closed Won</option>
-              <option value="Closed Lost">Closed Lost</option>
-            </select>
+            <div>
+              <label htmlFor="qa-stage" className="mb-1 block text-[11px] font-medium text-slate-500">
+                Stage <span className="text-slate-400">(optional)</span>
+              </label>
+              <select
+                id="qa-stage"
+                value={stage}
+                onChange={(e) => setStage(e.target.value)}
+                className="glass-input w-full"
+              >
+                <option value="">Select stage...</option>
+                <option value="Discovery">Discovery</option>
+                <option value="Qualification">Qualification</option>
+                <option value="Proposal">Proposal</option>
+                <option value="Negotiation">Negotiation</option>
+                <option value="Closed Won">Closed Won</option>
+                <option value="Closed Lost">Closed Lost</option>
+              </select>
+            </div>
           )}
 
-          {error && <p className="text-xs text-red-600">{error}</p>}
+          {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
 
           <div className="flex items-center justify-end gap-2 pt-1">
             <button

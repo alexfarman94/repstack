@@ -37,14 +37,35 @@ const tabs: { id: DashboardTab; label: string; icon: JSX.Element }[] = [
   },
 ];
 
-export function SidebarNav() {
+interface SidebarNavProps {
+  onCloseMobile?: () => void;
+}
+
+export function SidebarNav({ onCloseMobile }: SidebarNavProps) {
   const { activeTab, setActiveTab } = useRunner();
 
+  const handleTabClick = (tabId: DashboardTab) => {
+    setActiveTab(tabId);
+    onCloseMobile?.();
+  };
+
   return (
-    <aside className="flex h-full flex-col bg-[#0f0f14]">
+    <aside className="flex h-full flex-col bg-[#0f0f14]" role="navigation" aria-label="Main sidebar">
       {/* Logo area */}
-      <div className="flex items-center gap-2 px-4 py-3">
+      <div className="flex items-center justify-between px-4 py-3">
         <span className="text-sm font-bold tracking-tight text-white">Rep Stack</span>
+        {/* Close button on mobile */}
+        {onCloseMobile && (
+          <button
+            onClick={onCloseMobile}
+            className="flex h-6 w-6 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-white/[0.08] hover:text-white lg:hidden"
+            aria-label="Close sidebar"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* Account tree fills available space */}
@@ -54,11 +75,13 @@ export function SidebarNav() {
 
       {/* Bottom tab bar */}
       <div className="border-t border-white/[0.06] px-2 py-2">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1" role="tablist" aria-label="Dashboard sections">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
+              role="tab"
+              aria-selected={activeTab === tab.id}
               aria-current={activeTab === tab.id ? 'page' : undefined}
               className={`flex flex-1 flex-col items-center gap-0.5 rounded-md px-2 py-2.5 text-[11px] font-medium transition-colors ${
                 activeTab === tab.id

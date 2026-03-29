@@ -46,26 +46,44 @@ export function CustomAgentBuilder({ onCreated }: CustomAgentBuilderProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Agent name"
-        className="glass-input w-full"
-      />
-      <input
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Short description (optional)"
-        className="glass-input w-full"
-      />
-      <textarea
-        value={systemPrompt}
-        onChange={(e) => setSystemPrompt(e.target.value)}
-        rows={6}
-        placeholder="System prompt — tell the agent how to behave and what to output..."
-        className="glass-input w-full resize-y font-mono text-xs"
-      />
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      <div>
+        <label htmlFor="cab-name" className="mb-1 block text-[11px] font-medium text-slate-500">
+          Agent name <span className="text-red-400">*</span>
+        </label>
+        <input
+          id="cab-name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Competitive Intel"
+          className="glass-input w-full"
+        />
+      </div>
+      <div>
+        <label htmlFor="cab-desc" className="mb-1 block text-[11px] font-medium text-slate-500">
+          Description <span className="text-slate-400">(optional)</span>
+        </label>
+        <input
+          id="cab-desc"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Short description of what this agent does"
+          className="glass-input w-full"
+        />
+      </div>
+      <div>
+        <label htmlFor="cab-prompt" className="mb-1 block text-[11px] font-medium text-slate-500">
+          System prompt <span className="text-red-400">*</span>
+        </label>
+        <textarea
+          id="cab-prompt"
+          value={systemPrompt}
+          onChange={(e) => setSystemPrompt(e.target.value)}
+          rows={6}
+          placeholder="Tell the agent how to behave and what to output..."
+          className="glass-input w-full resize-y font-mono text-xs"
+        />
+      </div>
+      {error && <p className="text-xs text-red-600" role="alert">{error}</p>}
       <button
         type="submit"
         disabled={saving || !name.trim() || !systemPrompt.trim()}
