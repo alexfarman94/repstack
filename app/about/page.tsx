@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { PublicShell } from '@/components/PublicShell';
 
 export const metadata = {
   title: 'About — Rep Stack',
@@ -7,10 +8,11 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
+    <PublicShell>
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
       <h1 className="text-3xl font-bold text-white mb-6">About Rep Stack</h1>
 
-      <div className="space-y-5 text-stone-400 leading-relaxed">
+      <div className="space-y-5 text-slate-400 leading-relaxed">
         <p>
           Rep Stack is a library of AI tools built specifically for salespeople — Account Executives,
           BDRs, and Sales Engineers. Every tool here has been designed around real GTM workflows,
@@ -37,10 +39,10 @@ export default function AboutPage() {
             </div>
             <div>
               <p className="text-white font-semibold">Alex Farman</p>
-              <p className="text-sm text-stone-500">GTM AI Strategist</p>
+              <p className="text-sm text-slate-500">GTM AI Strategist</p>
             </div>
           </div>
-          <p className="text-sm text-stone-400 mb-4">
+          <p className="text-sm text-slate-400 mb-4">
             I build AI tools for sales teams and own the strategy for how AI gets used across GTM
             orgs. 26 AI products shipped. 75–80% adoption. ~15,000 hours freed up annually.
             Previously Sales Engineer at Bullhorn ($3.5m ACV closed in FY22/23) and HiBob.
@@ -58,7 +60,7 @@ export default function AboutPage() {
               href="https://www.linkedin.com/in/alex-farman-53575a106/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-stone-400 hover:text-white transition-colors"
+              className="text-sm text-slate-400 hover:text-white transition-colors"
             >
               LinkedIn →
             </a>
@@ -80,5 +82,6 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
+    </PublicShell>
   );
 }

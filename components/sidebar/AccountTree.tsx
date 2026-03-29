@@ -34,7 +34,6 @@ export function AccountTree() {
       const data = await res.json();
       if (!Array.isArray(data)) return;
 
-      // For each account, fetch opportunities
       const withOpps = await Promise.all(
         data.map(async (acct: Account) => {
           const oppsRes = await fetch(`/api/opportunities?accountId=${acct.id}`);
@@ -44,7 +43,6 @@ export function AccountTree() {
       );
       setAccounts(withOpps);
 
-      // Auto-select first account if nothing selected
       if (!activeAccountId && withOpps[0]?.id) {
         setContext(withOpps[0].id);
       }
@@ -57,7 +55,6 @@ export function AccountTree() {
     fetchAccounts();
   }, [refreshKey]);
 
-  // Auto-expand the active account
   useEffect(() => {
     if (activeAccountId) {
       setExpanded((prev) => ({ ...prev, [activeAccountId]: true }));
@@ -87,11 +84,12 @@ export function AccountTree() {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
-        <p className="text-xs font-semibold uppercase tracking-widest text-indigo-500">Accounts</p>
+      <div className="flex items-center justify-between px-4 pt-3 pb-2">
+        <p className="section-label-dark">Accounts</p>
         <button
           onClick={() => setAddModal({ type: 'account' })}
-          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+          className="flex h-6 w-6 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-white/[0.08] hover:text-white"
+          aria-label="Add account"
           title="Add account"
         >
           <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
@@ -101,25 +99,41 @@ export function AccountTree() {
       </div>
 
       {/* Search */}
-      <div className="px-4 pb-3">
+      <div className="px-3 pb-3">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search accounts..."
-          className="glass-input w-full text-xs"
+          className="sidebar-input w-full"
         />
       </div>
 
       {/* Tree */}
-      <div className="flex-1 overflow-y-auto px-2 pb-2">
+      <div className="flex-1 overflow-y-auto px-1.5 pb-2" role="tree">
         {loading ? (
-          <div className="px-2 py-4 text-xs text-slate-400">Loading...</div>
+          <div className="space-y-1.5 px-2 pt-2">
+            <div className="skeleton h-7 w-full" />
+            <div className="skeleton h-7 w-3/4" />
+            <div className="skeleton h-7 w-5/6" />
+          </div>
         ) : filtered.length === 0 ? (
-          <div className="px-2 py-4 text-center text-xs text-slate-400">
-            {accounts.length === 0 ? 'No accounts yet' : 'No matches'}
+          <div className="px-3 py-6 text-center text-xs text-slate-500">
+            {accounts.length === 0 ? (
+              <div>
+                <p className="mb-2">No accounts yet</p>
+                <button
+                  onClick={() => setAddModal({ type: 'account' })}
+                  className="text-indigo-400 hover:text-indigo-300 transition-colors"
+                >
+                  + Add your first account
+                </button>
+              </div>
+            ) : (
+              'No matches'
+            )}
           </div>
         ) : (
-          <div className="space-y-0.5">
+          <div className="space-y-px">
             {filtered.map((acct) => {
               const isActiveAcct = activeAccountId === acct.id;
               const isExpanded = expanded[acct.id] ?? false;
@@ -127,13 +141,13 @@ export function AccountTree() {
               const opps = acct.opportunities || [];
 
               return (
-                <div key={acct.id}>
+                <div key={acct.id} role="treeitem" aria-expanded={isExpanded}>
                   {/* Account node */}
                   <div
-                    className={`group flex items-center gap-1 rounded-lg px-2 py-1.5 text-left transition-colors cursor-pointer ${
+                    className={`group flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left transition-colors cursor-pointer ${
                       isActiveAcct && !activeOpportunityId
-                        ? 'bg-indigo-50 text-indigo-700'
-                        : 'text-slate-700 hover:bg-slate-50'
+                        ? 'bg-white/[0.08] text-white border-l-2 border-indigo-500 pl-2'
+                        : 'text-slate-300 hover:bg-white/[0.04] hover:text-white'
                     }`}
                     onClick={() => {
                       setContext(acct.id);
@@ -142,13 +156,13 @@ export function AccountTree() {
                   >
                     {/* Expand chevron */}
                     <svg
-                      width="14"
-                      height="14"
+                      width="12"
+                      height="12"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
-                      className={`shrink-0 text-slate-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                      className={`shrink-0 text-slate-500 transition-transform duration-150 ${isExpanded ? 'rotate-90' : ''}`}
                     >
                       <path d="M9 18l6-6-6-6" />
                     </svg>
@@ -157,7 +171,7 @@ export function AccountTree() {
 
                     {/* Doc count badge */}
                     {totalDocs > 0 && (
-                      <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+                      <span className="shrink-0 rounded-full bg-white/[0.1] px-1.5 py-0.5 text-[10px] font-medium text-slate-400">
                         {totalDocs}
                       </span>
                     )}
@@ -168,7 +182,8 @@ export function AccountTree() {
                         e.stopPropagation();
                         setAddModal({ type: 'opportunity', accountId: acct.id });
                       }}
-                      className="shrink-0 rounded opacity-0 transition-opacity group-hover:opacity-100 hover:bg-slate-200 p-0.5"
+                      className="shrink-0 rounded p-0.5 text-slate-600 opacity-0 transition-all group-hover:opacity-100 hover:bg-white/[0.08] hover:text-white"
+                      aria-label={`Add opportunity to ${acct.company_name}`}
                       title="Add opportunity"
                     >
                       <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
@@ -179,7 +194,7 @@ export function AccountTree() {
 
                   {/* Opportunities */}
                   {isExpanded && opps.length > 0 && (
-                    <div className="ml-5 space-y-0.5 py-0.5">
+                    <div className="ml-4 space-y-px py-0.5" role="group">
                       {opps.map((opp) => {
                         const isActiveOpp = activeOpportunityId === opp.id;
                         const oppDocs = docCount(opp.documents);
@@ -187,22 +202,23 @@ export function AccountTree() {
                         return (
                           <div
                             key={opp.id}
+                            role="treeitem"
                             onClick={() => setContext(acct.id, opp.id)}
-                            className={`flex items-center gap-2 rounded-md px-2 py-1 text-left transition-colors cursor-pointer ${
+                            className={`flex items-center gap-2 rounded-md px-2.5 py-1 text-left transition-colors cursor-pointer ${
                               isActiveOpp
-                                ? 'bg-indigo-50 text-indigo-700'
-                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'
+                                ? 'bg-white/[0.08] text-white border-l-2 border-indigo-500 pl-2'
+                                : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-200'
                             }`}
                           >
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-slate-600">
                               <circle cx="12" cy="12" r="3" />
                             </svg>
                             <span className="flex-1 truncate text-xs font-medium">{opp.name}</span>
                             {opp.stage && (
-                              <span className="shrink-0 text-[10px] text-slate-400">{opp.stage}</span>
+                              <span className="shrink-0 text-[10px] text-slate-500">{opp.stage}</span>
                             )}
                             {oppDocs > 0 && (
-                              <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
+                              <span className="shrink-0 rounded-full bg-white/[0.1] px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
                                 {oppDocs}
                               </span>
                             )}
@@ -214,10 +230,10 @@ export function AccountTree() {
 
                   {/* Empty opp state */}
                   {isExpanded && opps.length === 0 && (
-                    <div className="ml-5 py-1">
+                    <div className="ml-6 py-1">
                       <button
                         onClick={() => setAddModal({ type: 'opportunity', accountId: acct.id })}
-                        className="text-[11px] text-slate-400 hover:text-indigo-600 transition-colors"
+                        className="text-[11px] text-slate-500 transition-colors hover:text-indigo-400"
                       >
                         + Add opportunity
                       </button>

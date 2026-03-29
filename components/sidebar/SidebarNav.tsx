@@ -41,23 +41,29 @@ export function SidebarNav() {
   const { activeTab, setActiveTab } = useRunner();
 
   return (
-    <aside className="flex h-full flex-col border-r border-slate-200 bg-white/80 backdrop-blur-xl">
+    <aside className="flex h-full flex-col bg-[#0f0f14]">
+      {/* Logo area */}
+      <div className="flex items-center gap-2 px-4 py-3">
+        <span className="text-sm font-bold tracking-tight text-white">Rep Stack</span>
+      </div>
+
       {/* Account tree fills available space */}
       <div className="flex-1 overflow-hidden">
         <AccountTree />
       </div>
 
       {/* Bottom tab bar */}
-      <div className="border-t border-slate-200 px-2 py-2">
+      <div className="border-t border-white/[0.06] px-2 py-2">
         <div className="flex items-center gap-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-1 flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 text-[10px] font-medium transition-colors ${
+              aria-current={activeTab === tab.id ? 'page' : undefined}
+              className={`flex flex-1 flex-col items-center gap-0.5 rounded-md px-2 py-2.5 text-[11px] font-medium transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-indigo-50 text-indigo-700'
-                  : 'text-slate-400 hover:bg-slate-50 hover:text-slate-600'
+                  ? 'bg-white/[0.08] text-indigo-400'
+                  : 'text-slate-500 hover:bg-white/[0.04] hover:text-slate-300'
               }`}
             >
               {tab.icon}

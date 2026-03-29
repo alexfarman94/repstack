@@ -1,115 +1,136 @@
 import Link from 'next/link';
-import { tools, getFeaturedTools } from '@/data/tools';
-import { Tool } from '@/lib/types';
-import { ToolCard } from '@/components/ToolCard';
+import { NavBar } from '@/components/NavBar';
 
 export default function HomePage() {
-  const allPublic: Tool[] = tools.map(({ systemPrompt: _sp, ...rest }) => rest as Tool);
-  const featured: Tool[] = getFeaturedTools().map(({ systemPrompt: _sp, ...rest }) => rest as Tool);
-
   return (
-    <div>
+    <div className="min-h-screen bg-[#0A0A0F] text-white">
+      <NavBar variant="transparent" />
+
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-20 pb-16">
+      <section className="mx-auto max-w-5xl px-4 pt-24 pb-20 sm:px-6">
         <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 px-3 py-1 text-sm text-indigo-300 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-            {allPublic.length} live tools · All free
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-sm text-indigo-300">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
+            AI-powered deal workspace
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight mb-5 text-balance">
-            Your unfair advantage{' '}
-            <span className="text-indigo-400">in every deal</span>
+          <h1 className="text-4xl font-bold leading-tight text-balance sm:text-5xl">
+            Your deals. Full context.{' '}
+            <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+              AI that actually knows your account.
+            </span>
           </h1>
-          <p className="text-lg text-stone-400 leading-relaxed mb-8">
-            Live AI tools for Account Executives, BDRs, and Sales Engineers.
-            Paste your real situation. Get something ready to use in seconds.
-            Built by someone who ships AI for a living.
+          <p className="mt-5 text-lg leading-relaxed text-slate-400">
+            Upload your call transcripts, emails, and deal notes. Run AI agents that have full context on every account. Get discovery prep, risk audits, email drafts, and more — in seconds.
           </p>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+            >
+              Start free trial →
+            </Link>
             <Link
               href="/tools"
-              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 text-sm transition-colors duration-150"
+              className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/[0.08]"
             >
-              ⚡ Browse the tools →
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center gap-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] text-stone-300 font-medium px-5 py-2.5 text-sm transition-colors duration-150"
-            >
-              Who built this
+              Try free tools
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Persona strips */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {[
-            {
-              label: 'Account Executives',
-              value: 'ae',
-              emoji: '🎯',
-              desc: 'Deal prep, business cases, champion enablement, demo direction, objection handling',
-            },
-            {
-              label: 'BDRs',
-              value: 'bdr',
-              emoji: '📞',
-              desc: 'Cold sequences, LinkedIn outreach, objection flips, ICP qualification',
-            },
-            {
-              label: 'Sales Engineers',
-              value: 'se',
-              emoji: '🛠',
-              desc: 'RFP responses, tailored demo arcs, pre-call intel, business case support',
-            },
-          ].map((p) => (
-            <Link
-              key={p.value}
-              href={`/tools?persona=${p.value}`}
-              className="group rounded-2xl bg-white/[0.03] border border-white/[0.07] hover:border-white/[0.15] hover:bg-white/[0.05] p-5 transition-all duration-200"
-            >
-              <div className="text-2xl mb-3">{p.emoji}</div>
-              <h3 className="text-white font-semibold mb-1.5 group-hover:text-indigo-200 transition-colors">
-                {p.label}
-              </h3>
-              <p className="text-sm text-stone-500">{p.desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured tools */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-24">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">Featured tools</h2>
-          <Link href="/tools" className="text-sm text-stone-400 hover:text-white transition-colors">
-            View all {allPublic.length} →
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {featured.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
-        </div>
-      </section>
-
-      {/* CTA strip */}
+      {/* How it works */}
       <section className="border-t border-white/[0.06] bg-white/[0.02]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+          <p className="mb-8 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+            How it works
+          </p>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {[
+              {
+                step: '01',
+                title: 'Upload your deal docs',
+                desc: 'Call transcripts, emails, proposals, notes — drag and drop into your account workspace.',
+              },
+              {
+                step: '02',
+                title: 'Pick an AI agent',
+                desc: 'Discovery prep, objection handling, deal risk audit, email drafts, exec briefings — or build your own.',
+              },
+              {
+                step: '03',
+                title: 'Get contextual output',
+                desc: 'Every agent has full context on your account. No re-pasting, no context limits, no generic answers.',
+              },
+            ].map((item) => (
+              <div key={item.step} className="group">
+                <p className="mb-3 text-xs font-medium text-indigo-400">{item.step}</p>
+                <h3 className="mb-2 text-base font-semibold text-white">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-400">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Agents preview */}
+      <section className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
+        <p className="mb-8 text-[11px] font-semibold uppercase tracking-widest text-slate-500">
+          Pre-built agents
+        </p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { icon: '🔍', name: 'Discovery Prep', desc: 'Targeted questions and gap analysis from your deal docs' },
+            { icon: '🛡', name: 'Objection Handler', desc: 'Likely objections with psychologically-informed responses' },
+            { icon: '⚠️', name: 'Deal Risk Audit', desc: 'MEDDIC scorecard and red flag detection' },
+            { icon: '✉️', name: 'Email Draft', desc: 'Context-aware follow-up emails for any deal stage' },
+            { icon: '📞', name: 'Call Summary', desc: 'Structured summary with decisions and next steps' },
+            { icon: '📋', name: 'Exec Briefing', desc: 'One-pager for senior stakeholder meetings' },
+          ].map((agent) => (
+            <div
+              key={agent.name}
+              className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-4 transition-colors hover:border-white/[0.12] hover:bg-white/[0.04]"
+            >
+              <span className="mb-2 block text-lg">{agent.icon}</span>
+              <h3 className="text-sm font-semibold text-white">{agent.name}</h3>
+              <p className="mt-1 text-xs leading-relaxed text-slate-400">{agent.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-white/[0.06] bg-white/[0.02]">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-6 px-4 py-14 sm:flex-row sm:px-6">
           <div>
-            <h2 className="text-xl font-semibold text-white mb-1">Tools that do the work, not just describe it.</h2>
-            <p className="text-stone-400 text-sm">Paste your situation. Get output you can use. No [BRACKETS] to fill in.</p>
+            <h2 className="text-xl font-semibold text-white">
+              Stop re-pasting context into ChatGPT.
+            </h2>
+            <p className="mt-1 text-sm text-slate-400">
+              RepStack makes the database the context — so every agent run is fully informed.
+            </p>
           </div>
           <Link
-            href="/tools"
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-5 py-2.5 text-sm transition-colors duration-150 flex-shrink-0"
+            href="/sign-up"
+            className="inline-flex flex-shrink-0 items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
           >
-            ⚡ Try a tool →
+            Get started free →
           </Link>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/[0.06] py-8">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6">
+          <p className="text-sm text-slate-500">
+            Built by{' '}
+            <a href="https://alexfarman.me" target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-white">
+              Alex Farman
+            </a>
+          </p>
+          <p className="text-xs text-slate-600">&copy; {new Date().getFullYear()} Rep Stack</p>
+        </div>
+      </footer>
     </div>
   );
 }

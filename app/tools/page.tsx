@@ -1,6 +1,7 @@
 import { tools } from '@/data/tools';
 import { Tool } from '@/lib/types';
 import { ToolsGrid } from '@/components/ToolsGrid';
+import { NavBar } from '@/components/NavBar';
 
 export const metadata = {
   title: 'All Tools — Rep Stack',
@@ -12,7 +13,9 @@ export default function ToolsPage() {
   const publicTools: Tool[] = tools.map(({ systemPrompt: _sp, ...rest }) => rest as Tool);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <>
+    <NavBar />
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 bg-[var(--bg-secondary)] min-h-screen">
       <div className="mb-10">
         <h1 className="text-3xl font-bold text-slate-900 mb-3">All tools</h1>
         <p className="text-slate-500">
@@ -21,5 +24,6 @@ export default function ToolsPage() {
       </div>
       <ToolsGrid tools={publicTools} />
     </div>
+    </>
   );
 }

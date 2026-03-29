@@ -5,6 +5,7 @@ import { PersonaBadge } from '@/components/PersonaBadge';
 import { CopyButton } from '@/components/CopyButton';
 import { ToolCard } from '@/components/ToolCard';
 import { ToolRunner } from '@/components/ToolRunner';
+import { NavBar } from '@/components/NavBar';
 import { FORMAT_ICONS, FORMAT_LABELS } from '@/lib/types';
 
 export async function generateStaticParams() {
@@ -32,7 +33,9 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
   const { systemPrompt: _sp, ...toolPublic } = tool;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <>
+    <NavBar />
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 bg-[var(--bg-secondary)] min-h-screen">
       {/* Back */}
       <Link
         href="/tools"
@@ -171,5 +174,6 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
         </div>
       )}
     </div>
+    </>
   );
 }
