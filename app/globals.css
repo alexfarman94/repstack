@@ -77,3 +77,9 @@ body {
     @apply text-[11px] font-semibold uppercase tracking-widest text-slate-500;
   }
 }
+
+/* ── Keyframes ── */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
