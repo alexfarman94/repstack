@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import { RunnerProvider } from './RunnerContext';
 import { SidebarNav } from '@/components/sidebar/SidebarNav';
 import { OutputPanel } from '@/components/output/OutputPanel';
@@ -30,8 +30,18 @@ function ShellContent({ children }: { children: ReactNode }) {
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   return (
-    <RunnerProvider>
-      <ShellContent>{children}</ShellContent>
-    </RunnerProvider>
+    <Suspense fallback={
+      <div className="flex h-screen items-center justify-center bg-[var(--bg-secondary)]">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 [animation-delay:0ms]" />
+          <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 [animation-delay:150ms]" />
+          <span className="h-2 w-2 animate-bounce rounded-full bg-indigo-400 [animation-delay:300ms]" />
+        </div>
+      </div>
+    }>
+      <RunnerProvider>
+        <ShellContent>{children}</ShellContent>
+      </RunnerProvider>
+    </Suspense>
   );
 }

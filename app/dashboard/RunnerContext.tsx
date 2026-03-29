@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useContext, useState, useCallback, ReactNode, Dispatch, SetStateAction } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { ToolInput } from '@/lib/types';
 
 // ─── Config types ──────────────────────────────────────────────────────────────
@@ -92,10 +93,19 @@ const RunnerContext = createContext<RunnerContextValue>({
 });
 
 export function RunnerProvider({ children }: { children: ReactNode }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Hydrate from URL params on mount
+  const initialAccount = searchParams.get('account') || '';
+  const initialOpp = searchParams.get('opp') || '';
+  const initialTab = (searchParams.get('tab') as DashboardTab) || 'workspace';
+
   // Active context
-  const [activeAccountId, setActiveAccountId] = useState('');
-  const [activeOpportunityId, setActiveOpportunityId] = useState('');
-  const [activeTab, setActiveTab] = useState<DashboardTab>('workspace');
+  const [activeAccountId, setActiveAccountIdRaw] = useState(initialAccount);
+  const [activeOpportunityId, setActiveOpportunityIdRaw] = useState(initialOpp);
+  const [activeTab, setActiveTabRaw] = useState<DashboardTab>(initialTab);
 
   // Agent selection
   const [selectedAgentId, setSelectedAgentId] = useState('');
@@ -103,24 +113,55 @@ export function RunnerProvider({ children }: { children: ReactNode }) {
 
   // Runner state
   const [runner, setRunner] = useState<RunnerConfig | null>(null);
-  const [accountId, setAccountIdRaw] = useState('');
+  const [accountId, setAccountIdRaw] = useState(initialAccount);
   const [latestOutput, setLatestOutput] = useState('');
   const [latestStatus, setLatestStatus] = useState<'idle' | 'loading' | 'streaming' | 'done' | 'error'>('idle');
   const [latestRunnerTitle, setLatestRunnerTitle] = useState('');
   const [runId, setRunId] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
 
+  // Sync state → URL params (debounced to avoid thrashing)
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (activeAccountId) params.set('account', activeAccountId);
+    if (activeOpportunityId) params.set('opp', activeOpportunityId);
+    if (activeTab !== 'workspace') params.set('tab', activeTab);
+    const qs = params.toString();
+    const newUrl = qs ? `${pathname}?${qs}` : pathname;
+    router.replace(newUrl, { scroll: false });
+  }, [activeAccountId, activeOpportunityId, activeTab, pathname, router]);
+
+  // Wrapper to clear agent selection when account changes
+  const setActiveAccountId = useCallback((id: string) => {
+    setActiveAccountIdRaw((prev) => {
+      if (prev !== id) {
+        // Account changed — clear agent selection
+        setSelectedAgentId('');
+        setIsUserAgent(false);
+      }
+      return id;
+    });
+  }, []);
+
+  const setActiveOpportunityId = useCallback((id: string) => {
+    setActiveOpportunityIdRaw(id);
+  }, []);
+
+  const setActiveTab = useCallback((tab: DashboardTab) => {
+    setActiveTabRaw(tab);
+  }, []);
+
   const setContext = useCallback((acctId: string, oppId?: string) => {
     setActiveAccountId(acctId);
-    setActiveOpportunityId(oppId || '');
+    setActiveOpportunityIdRaw(oppId || '');
     // Sync legacy accountId
     setAccountIdRaw(acctId);
-  }, []);
+  }, [setActiveAccountId]);
 
   const setAccountId = useCallback((id: string) => {
     setAccountIdRaw(id);
     setActiveAccountId(id);
-  }, []);
+  }, [setActiveAccountId]);
 
   const open = useCallback((config: RunnerConfig, initialAccountId?: string) => {
     setRunner(config);
