@@ -30,14 +30,14 @@ export function AgentGrid({ agents }: AgentGridProps) {
   return (
     <section>
       {/* Filter tabs */}
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Agents</p>
-        <div className="flex gap-1 rounded-lg border border-slate-200 bg-white/70 p-0.5">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="section-label">Agents</p>
+        <div className="flex gap-0.5 rounded-md border border-slate-200 bg-white p-0.5">
           {(['all', 'platform', 'custom'] as Filter[]).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`rounded-md px-2.5 py-1 text-[11px] font-medium capitalize transition-colors ${
+              className={`rounded px-2 py-1 text-[11px] font-medium capitalize transition-colors ${
                 filter === f
                   ? 'bg-indigo-600 text-white'
                   : 'text-slate-500 hover:text-slate-700'
@@ -49,13 +49,13 @@ export function AgentGrid({ agents }: AgentGridProps) {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* List */}
       {filtered.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-white/50 p-6 text-center text-sm text-slate-400">
+        <div className="rounded-lg border border-dashed border-slate-200 bg-white p-6 text-center text-sm text-slate-400">
           {filter === 'custom' ? 'No custom agents yet. Create one in Settings.' : 'No agents available.'}
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
           {filtered.map((agent) => (
             <AgentCard
               key={agent.id}

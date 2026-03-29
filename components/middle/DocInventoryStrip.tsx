@@ -15,7 +15,6 @@ const DOC_TYPE_CONFIG: Record<string, { icon: string; label: string }> = {
 export function DocInventoryStrip({ docs }: DocInventoryStripProps) {
   if (docs.length === 0) return null;
 
-  // Count by type
   const counts: Record<string, number> = {};
   for (const d of docs) {
     const type = d.doc_type || 'other';
@@ -23,15 +22,15 @@ export function DocInventoryStrip({ docs }: DocInventoryStripProps) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-1.5">
       {Object.entries(counts).map(([type, count]) => {
         const config = DOC_TYPE_CONFIG[type] || DOC_TYPE_CONFIG.other;
         return (
           <span
             key={type}
-            className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 text-xs text-slate-600"
+            className="inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-[11px] text-slate-600"
           >
-            <span>{config.icon}</span>
+            <span className="text-xs">{config.icon}</span>
             {count} {config.label}
           </span>
         );

@@ -15,7 +15,6 @@ interface SmartSuggestProps {
   agents: Agent[];
 }
 
-// Maps doc types to the most relevant agent names
 const SUGGEST_MAP: Record<string, string[]> = {
   transcript: ['Call Summary', 'Discovery Prep', 'Deal Risk Audit'],
   email: ['Email Draft', 'Objection Handler', 'Exec Briefing'],
@@ -30,18 +29,16 @@ export function SmartSuggest({ docTypes, agents }: SmartSuggestProps) {
   const suggested = useMemo(() => {
     if (agents.length === 0) return [];
 
-    // Collect ranked agent names from doc types
     const scores: Record<string, number> = {};
     const uniqueTypes = Array.from(new Set(docTypes));
 
     for (const type of uniqueTypes) {
       const names = SUGGEST_MAP[type] || SUGGEST_MAP.other;
       names.forEach((name, i) => {
-        scores[name] = (scores[name] || 0) + (3 - i); // higher score = more relevant
+        scores[name] = (scores[name] || 0) + (3 - i);
       });
     }
 
-    // Match scored names to actual agents, take top 3
     const ranked = agents
       .map((a) => ({ ...a, score: scores[a.name] || 0 }))
       .sort((a, b) => b.score - a.score)
@@ -53,33 +50,24 @@ export function SmartSuggest({ docTypes, agents }: SmartSuggestProps) {
   if (suggested.length === 0) return null;
 
   return (
-    <div>
-      <p className="mb-2 text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-        Suggested for your context
-      </p>
-      <div className="flex gap-2">
-        {suggested.map((agent) => {
-          const isSelected = selectedAgentId === agent.id;
-          return (
-            <button
-              key={agent.id}
-              onClick={() => setSelectedAgent(agent.id, !!agent.isUser)}
-              className={`flex-1 rounded-xl border px-3 py-2.5 text-left transition-all ${
-                isSelected
-                  ? 'border-indigo-300 bg-indigo-50 ring-1 ring-indigo-200'
-                  : 'border-slate-200 bg-white/80 hover:border-indigo-200 hover:bg-white'
-              }`}
-            >
-              <p className={`text-xs font-semibold ${isSelected ? 'text-indigo-700' : 'text-slate-800'}`}>
-                {agent.name}
-              </p>
-              {agent.score > 0 && (
-                <p className="mt-0.5 text-[10px] text-indigo-400">Recommended</p>
-              )}
-            </button>
-          );
-        })}
-      </div>
+    <div className="flex items-center gap-2 overflow-x-auto">
+      <span className="shrink-0 text-[11px] font-medium text-slate-400">Suggested:</span>
+      {suggested.map((agent) => {
+        const isSelected = selectedAgentId === agent.id;
+        return (
+          <button
+            key={agent.id}
+            onClick={() => setSelectedAgent(agent.id, !!agent.isUser)}
+            className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-all ${
+              isSelected
+                ? 'bg-indigo-600 text-white'
+                : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
+            }`}
+          >
+            {agent.name}
+          </button>
+        );
+      })}
     </div>
   );
 }

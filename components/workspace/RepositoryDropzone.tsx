@@ -30,12 +30,14 @@ export function RepositoryDropzone({ accountId }: RepositoryDropzoneProps) {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const onFilePick = (picked: File | null) => {
     if (!picked) return;
     setFile(picked);
     setMessage('');
     setError('');
+    setExpanded(true);
   };
 
   const onSave = async () => {
@@ -64,6 +66,7 @@ export function RepositoryDropzone({ accountId }: RepositoryDropzoneProps) {
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
       setMessage('Document uploaded successfully.');
+      setExpanded(false);
       triggerRefresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -72,15 +75,40 @@ export function RepositoryDropzone({ accountId }: RepositoryDropzoneProps) {
     }
   };
 
-  return (
-    <section className="glass-panel p-4">
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">Upload Documents</p>
+  // Collapsed state — compact upload link
+  if (!expanded && !file) {
+    return (
+      <div className="flex items-center gap-3">
+        <button
+          onClick={() => setExpanded(true)}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-indigo-600 transition-colors hover:text-indigo-500"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
+          </svg>
+          Upload documents
+        </button>
         {activeOpportunityId && (
-          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[10px] font-medium text-indigo-600">
-            Linked to opportunity
+          <span className="rounded bg-indigo-50 px-1.5 py-0.5 text-[10px] font-medium text-indigo-600">
+            Linked to opp
           </span>
         )}
+        {message && <span className="text-[11px] text-emerald-600">{message}</span>}
+      </div>
+    );
+  }
+
+  // Expanded state — full dropzone
+  return (
+    <section className="rounded-lg border border-slate-200 bg-white p-3">
+      <div className="mb-2 flex items-center justify-between">
+        <p className="section-label">Upload Documents</p>
+        <button
+          onClick={() => { setExpanded(false); setFile(null); }}
+          className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+        >
+          Collapse
+        </button>
       </div>
 
       <div
@@ -92,12 +120,12 @@ export function RepositoryDropzone({ accountId }: RepositoryDropzoneProps) {
         }}
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
-        className={`flex min-h-[80px] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed p-4 text-center transition-colors ${
+        className={`flex min-h-[60px] cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-3 text-center transition-colors ${
           dragging
             ? 'border-indigo-400 bg-indigo-50/50'
             : file
             ? 'border-emerald-300 bg-emerald-50/30'
-            : 'border-slate-200 bg-white/60 hover:border-slate-300'
+            : 'border-slate-200 bg-slate-50 hover:border-slate-300'
         }`}
       >
         <input
@@ -111,9 +139,6 @@ export function RepositoryDropzone({ accountId }: RepositoryDropzoneProps) {
           <p className="text-sm font-medium text-slate-700">{file.name}</p>
         ) : (
           <>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-1 text-slate-300">
-              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" />
-            </svg>
             <p className="text-xs text-slate-500">Drop file or click to upload</p>
             <p className="mt-0.5 text-[10px] text-slate-400">.txt or .docx up to 5MB</p>
           </>

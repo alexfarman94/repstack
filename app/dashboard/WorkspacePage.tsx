@@ -163,11 +163,31 @@ export function WorkspacePage() {
   };
 
   if (loading) {
-    return <div className="glass-panel p-6 text-sm text-slate-500">Loading workspace...</div>;
+    return (
+      <div className="flex flex-col gap-4">
+        {/* Skeleton context header */}
+        <div className="border-b border-slate-100 py-3">
+          <div className="skeleton h-5 w-48" />
+        </div>
+        {/* Skeleton agent list */}
+        <div>
+          <div className="skeleton mb-3 h-4 w-16" />
+          <div className="divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="flex items-center gap-3 px-3 py-2.5">
+                <div className="skeleton h-4 w-4 rounded" />
+                <div className="skeleton h-4 flex-1" />
+                <div className="skeleton h-4 w-14 rounded" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {/* Context header */}
       <ContextHeader
         accountName={activeAccount?.company_name}
