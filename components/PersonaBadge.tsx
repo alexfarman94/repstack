@@ -1,9 +1,9 @@
 import { Persona, PERSONA_LABELS } from '@/lib/types';
 
 const PERSONA_STYLES: Record<Persona, string> = {
-  ae: 'bg-violet-500/15 text-violet-300 border border-violet-500/25',
-  bdr: 'bg-sky-500/15 text-sky-300 border border-sky-500/25',
-  se: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/25',
+  ae: 'bg-violet-100 text-violet-700 border border-violet-200',
+  bdr: 'bg-sky-100 text-sky-700 border border-sky-200',
+  se: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
 };
 
 interface PersonaBadgeProps {

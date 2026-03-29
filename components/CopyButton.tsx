@@ -34,8 +34,8 @@ export function CopyButton({ text, label = 'Copy prompt', className = '' }: Copy
       onClick={handleCopy}
       className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-150 ${
         copied
-          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-          : 'bg-white/10 text-white border border-white/15 hover:bg-white/15'
+          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+          : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900'
       } ${className}`}
     >
       {copied ? (

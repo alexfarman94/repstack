@@ -33,7 +33,7 @@ export function ToolFilter({ persona, format, onPersonaChange, onFormatChange, c
     <div className="flex flex-col gap-4">
       {/* Persona filter */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-stone-500 uppercase tracking-wider font-medium w-full sm:w-auto">Role</span>
+        <span className="text-xs text-slate-500 uppercase tracking-wider font-medium w-full sm:w-auto">Role</span>
         {PERSONAS.map((p) => (
           <button
             key={p.value}
@@ -41,7 +41,7 @@ export function ToolFilter({ persona, format, onPersonaChange, onFormatChange, c
             className={`rounded-full px-3 py-1 text-sm font-medium transition-all duration-150 ${
               persona === p.value
                 ? 'bg-indigo-600 text-white'
-                : 'bg-white/[0.06] text-stone-400 hover:text-white hover:bg-white/[0.1] border border-white/[0.08]'
+                : 'bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             {p.label}
@@ -51,7 +51,7 @@ export function ToolFilter({ persona, format, onPersonaChange, onFormatChange, c
 
       {/* Format filter */}
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-stone-500 uppercase tracking-wider font-medium w-full sm:w-auto">Format</span>
+        <span className="text-xs text-slate-500 uppercase tracking-wider font-medium w-full sm:w-auto">Format</span>
         {FORMATS.map((f) => (
           <button
             key={f.value}
@@ -59,7 +59,7 @@ export function ToolFilter({ persona, format, onPersonaChange, onFormatChange, c
             className={`rounded-full px-3 py-1 text-sm font-medium transition-all duration-150 ${
               format === f.value
                 ? 'bg-indigo-600 text-white'
-                : 'bg-white/[0.06] text-stone-400 hover:text-white hover:bg-white/[0.1] border border-white/[0.08]'
+                : 'bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             {f.label}
@@ -68,7 +68,7 @@ export function ToolFilter({ persona, format, onPersonaChange, onFormatChange, c
       </div>
 
       {/* Count */}
-      <p className="text-sm text-stone-500">
+      <p className="text-sm text-slate-500">
         Showing {counts.filtered} of {counts.total} tools
       </p>
     </div>
